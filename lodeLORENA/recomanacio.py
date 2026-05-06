@@ -207,7 +207,7 @@ class RecomanacioSimple(Recomanacio):
         
         self._avg_general=sumatori_total/valoracions_total
         self._num_vots=valoracions_total
-        self._min_vots=k
+        self._min_vots=min_vots
         
     def calcular_recomanacio(self):
         primera_part=((self._num_vots/(self._num_vots+self._min_vots))*self._avg_item)
