@@ -1,8 +1,7 @@
 class Usuari:
 
     _user_id: int
-    _localitzacio: str
-    _edat: float
+    _llista_puntuacions: dict
 
     def __init__(self, user_id: int, localitzacio: str, edat: float):
         self._user_id = user_id

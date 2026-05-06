@@ -43,7 +43,7 @@ class Llibre(Contingut):
     def get_imatges(self): 
         return self._imatges
 
-class Pelicula(Contingut):
+class Movie(Contingut):
 
     _movie_id: int
     _generes: List[str]

@@ -3,8 +3,10 @@ from abc import ABC, abstractmethod
 from typing import List, Dict
 from entrega.gestionador import Gestionador
 from entrega.contingut import Contingut
+from entrega.usuari import Usuari
+from entrega.config import *
 
-class Recomanacio(ABC):
+class Recomanacio_Llibre(ABC):
 
     _recomanacio_final: List
     _gestionador: Gestionador
@@ -31,11 +33,11 @@ class Recomanacio(ABC):
 
 
 
-class RecomanacioSimple(Recomanacio):
+class RecomanacioSimple(Recomanacio_Llibre):
     _avg_general: float
     _avg_item: dict
     _num_vots: int
-    _min_vots:int
+
 
     def __init__(self,gestionador: Gestionador):
         super().__init__(gestionador)
@@ -43,9 +45,9 @@ class RecomanacioSimple(Recomanacio):
         self._avg_general=0
         self._avg_item={}
         self._num_vots=0
-        self._min_vots=0
+     
 
-    def trobar_similituds(self,min_vots:int, usuari:Usuari): #importa si al int que entro li canvio el nom?
+    def trobar_similituds(self, usuari:Usuari): #importa si al int que entro li canvio el nom?
         dades = self._gestionador.get_matriu_dades()
 
         #calcul avg_general i avg_item i num_vots
@@ -65,20 +67,20 @@ class RecomanacioSimple(Recomanacio):
         
         self._avg_general=sumatori_total/valoracions_total
         self._num_vots=valoracions_total
-        self._min_vots=min_vots
+        
         
     def calcular_recomanacio(self):
-        primera_part=((self._num_vots/(self._num_vots+self._min_vots))*self._avg_item)
+        primera_part=((self._num_vots/(self._num_vots+MIN_VOTS))*self._avg_item)
         segona_part=((self._min_vots/(self._num_vots+self._min_vots))*self._avg_general)
 
         self._recomanacio_final=primera_part+segona_part
 
     def __str__(self):
-        #????
+        #???? titol
         return '\n'.join([str(x) for x in self._recomanacio_final])
 
 
-class RecomanacioColaborativa(Recomanacio):
+class RecomanacioColaborativa(Recomanacio_Llibre):
 
     _usuaris_similars:List
 
@@ -96,3 +98,7 @@ class RecomanacioColaborativa(Recomanacio):
         arrel1=0
         arrel2=0
         for IDuse,content in dades.items():
+
+'''APARTIR DE AQUI ES TOT DE MOVIES, NO TOCAR'''
+
+class Recomanacio_Movie

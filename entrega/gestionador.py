@@ -3,8 +3,11 @@ from typing import List, Dict
 import csv
 from entrega.contingut import Contingut
 from entrega.usuari import Usuari
+import numpy as np
 
-class Gestionador:
+
+#gestionador BOOKS
+class Gestionador_BOOKS:
 
     _matriu_dades: list
     _dict_contingut: Dict[str, 'Contingut']
@@ -60,10 +63,28 @@ class Gestionador:
 
                 matriu_dades[fila][columna] = rating
         
-        self._matriu_dades = matriu_dades
-        self._usuari_index = usuari_index
-        self._contingut_index = idcont_index
+        # 2. ARA SÍ: Creem la matriu NumPy de veritat
+        num_usuaris = len(usuari_index)
+        num_items = len(idcont_index)
+    
+        print(f"Creant matriu NumPy de dimensions: {num_usuaris}x{num_items}...")
+    
+    # Utilitzem float32 per estalviar la meitat de memòria RAM (en comptes del float64 per defecte)
+        self.matriu_dades = np.zeros((num_usuaris, num_items), dtype=np.float32)
+
+    # 3. Traspassem les dades del diccionari temporal a la matriu NumPy
+        for f, columnes in matriu_dades.items():
+            for c, valor_rating in columnes.items():
+                self.matriu_dades[f, c] = valor_rating
+
+    
+        self.usuari_index = usuari_index
+        self.idcont_index = idcont_index
 
     #def importar_dades_contingut(self, nomfitxer,sep):
     #def importar_dades_usuaris(self, nomfitxer,sep):
     #getters
+
+#gestionador MOVIES
+
+class Gestionador_MOVIES:
