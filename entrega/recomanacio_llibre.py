@@ -99,6 +99,4 @@ class RecomanacioColaborativa(Recomanacio_Llibre):
         arrel2=0
         for IDuse,content in dades.items():
 
-'''APARTIR DE AQUI ES TOT DE MOVIES, NO TOCAR'''
 
-class Recomanacio_Movie

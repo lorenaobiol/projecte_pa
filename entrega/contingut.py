@@ -3,13 +3,13 @@ from typing import List, Dict
 
 class Contingut(ABC):
 
-    _nom: str
+    _titol: str
 
-    def __init__(self, nom: str):
-        self._nom = nom
+    def __init__(self, titol: str):
+        self._titol = titol
 
     def get_nom(self): 
-        return self._nom
+        return self._titol
 
     @abstractmethod
     def __str__(self) -> str:
