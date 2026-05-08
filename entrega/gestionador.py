@@ -145,11 +145,11 @@ class Gestionador_MOVIES:
         num_usuaris = len(usuari_index)
         num_items = len(idcont_index)
     
-        self.matriu_dades = np.zeros((num_usuaris, num_items), dtype=np.float32)
+        self._matriu_dades = np.zeros((num_usuaris, num_items), dtype=np.float32)
 
-        for f, columnes in matriu_dades.items():
+        for f, columnes in self._matriu_dades.items():
             for c, valor_rating in columnes.items():
-                self.matriu_dades[f, c] = valor_rating
+                self._matriu_dades[f, c] = valor_rating
 
         self.usuari_index = usuari_index
         self.idcont_index = idcont_index

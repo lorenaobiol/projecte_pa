@@ -83,10 +83,12 @@ class RecomanacioSimple_Movie(Recomanacio_Movie):
 class RecomanacioColaborativa_Movie(Recomanacio_Movie):
 
     _usuaris_similars: dict
+    _usuari_a_comparar: int
 
     def __init__(self,gestionador:Gestionador):
         super().__init__(gestionador)
         self._usuaris_similars= dict()
+        self._usuari_a_comparar=0
     
     def trobar_similituds(self, userID:int):
         dades = self._gestionador.get_matriu_dades() #mirar de ficar un super 
@@ -102,11 +104,13 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
         for IDuser,fila in usuaris_index.items():
 
             if IDuser == userID:                                        # No cal comparar l'usuari amb ell mateix
+                self._usuari_a_comparar = userID
                 continue
 
             valoracions=dades[fila,:]
             en_comu = (valoracions_u_act > 0) & (valoracions > 0)       #Aixo crea un filtre de TRUE o  FALSE | si se compleix a les 2 es true
-            
+
+
             val_1=valoracions_u_act[en_comu]
             val_2=valoracions[en_comu]
 
@@ -118,8 +122,83 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
             denominador = np.sqrt(np.sum(val_1**2)) * np.sqrt(np.sum(val_2**2))
 
             similituds[IDuser] = numerador / denominador
+        
+        self._usuaris_similars= similituds
 
     def calcular_recomanacio(self):
+        dades = self._gestionador.get_matriu_dades()
+        usuaris_index=self._gestionador.get_usuari_index()
+        movies_index=self._gestionador.get_contingut_index()
+
+        dict_similituds=dict()
+
+        #Amb una funcio lambda:
+        de_gran_a_petit=sorted(self._usuaris_similars.items(), key=lambda x: x[1], reverse=True)
+
+        for x in range(NUM_RECOMANACIONS):
+            IDuser, similitud = de_gran_a_petit[x]
+            dict_similituds[IDuser] = [similitud]
+
+        for IDuser,fila in usuaris_index.items():
+            if IDuser in dict_similituds.keys():
+
+                fila_real=dades[fila,:]
+                notes=fila_real[fila_real>0]
+
+                if len(notes) > 0:
+                    mitjana_usuari = notes.mean()
+                else:
+                    mitjana_usuari = 0.0
+
+                dict_similituds[IDuser].append(mitjana_usuari)
+
+        #Calcul de la mitjana individual del usuari a comparar.
+        llista_user=dades[usuaris_index[self._usuari_a_comparar],:]
+        mitjana_user=[llista_user[llista_user>0].mean() if len(llista_user[llista_user>0])>0 else 0.0]
+
+        
+
+        #selecioneo unes determinades files de la matriu
+        files=[usuaris_index[IDuser] for IDuser in dict_similituds]
+        matriu=dades[files]
+        for movie, columna in movies_index.items():
+            sumatori=0
+            for user, fila in usuaris_index.items():
+                if user in dict_similituds:
+                    notes=dades[fila,columna]
+                    for nota in notes:
+                        similitut=dict_similituds[user][0]
+                        mitjana=dict_similituds[user][1]
+
+                        sumatori+=similitut*(nota-mitjana)
+            total_similituts=sum([s[0] for s in dict_similituds.values()])
+            divisio=sumatori/total_similituts
+
+            total=mitjana_user+divisio
+            
+            self._recomanacio_final[movie]=total #quans afagixo a la recomanacio final? el NUM_RECOMANACIONS?
+
+
+
+
+
+
+
+                
+
+
+                
+
+
+
+
+
+            
+
+
+            
+
+
         
 
         
