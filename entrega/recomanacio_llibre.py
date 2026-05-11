@@ -100,3 +100,6 @@ class RecomanacioColaborativa(Recomanacio_Llibre):
         for IDuse,content in dades.items():
 
 
+recomanacio_basat_contingut
+- no va ficar li print etc
+-no implementat per falta de dades
