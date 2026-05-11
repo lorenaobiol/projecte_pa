@@ -147,12 +147,12 @@ class Gestionador_MOVIES:
     
         self._matriu_dades = np.zeros((num_usuaris, num_items), dtype=np.float32)
 
-        for f, columnes in self._matriu_dades.items():
+        for f, columnes in matriu_dades.items():
             for c, valor_rating in columnes.items():
                 self._matriu_dades[f, c] = valor_rating
 
-        self.usuari_index = usuari_index
-        self.idcont_index = idcont_index
+        self._usuari_index = usuari_index
+        self._contingut_index = idcont_index
 
     def importar_dades_contingut(self, nomfitxer,sep):
         with open(nomfitxer, "r", encoding='utf-8') as csv_file:

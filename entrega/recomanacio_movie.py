@@ -1,18 +1,21 @@
 from abc import ABC, abstractmethod 
 from typing import List, Dict
 import numpy as np
-from entrega.gestionador import Gestionador
+from entrega.gestionador import *
 from entrega.contingut import Contingut
 from entrega.usuari import Usuari
 from entrega.config import *
 from math import sqrt
+import logging
 
+
+#visualitzar!!
 class Recomanacio_Movie(ABC):
 
     _recomanacio_final: dict
-    _gestionador: Gestionador
+    _gestionador: Gestionador_MOVIES
 
-    def __init__(self,gestionador: Gestionador):
+    def __init__(self,gestionador: Gestionador_MOVIES):
         self._recomanacio_final = dict()
         self._gestionador = gestionador
     
@@ -38,14 +41,16 @@ class RecomanacioSimple_Movie(Recomanacio_Movie):
     _avg_general: float
     _avg_item: dict
     _num_vots: int
+    _num_vots_item: dict
 
 
-    def __init__(self,gestionador: Gestionador):
+    def __init__(self,gestionador: Gestionador_MOVIES):
         super().__init__(gestionador)
-        self._dict_contingut: dict = {}
+    
         self._avg_general=0
         self._avg_item={}
         self._num_vots=0
+        self._num_vots_item=dict() #acabar
      
 
     def trobar_similituds(self, usuari:Usuari): 
@@ -58,20 +63,23 @@ class RecomanacioSimple_Movie(Recomanacio_Movie):
         self._avg_general= sumatori / self._num_vots
 
         for movie, columna in movie_index.items():
-            valoracio=dades[:,columna]                                      #agafo tota la fila i una columna
-            valoracions_reals=valoracio[valoracio>0]                        #agafo sol les valoracions que son diferents de 0
+            valoracio=dades[:,columna]                                              #agafo tota la fila i una columna
+            valoracions_reals=valoracio[valoracio>0]                                 #agafo sol les valoracions que son diferents de 0
 
             if valoracions_reals.size > 0:
-                self._avg_item[movie] = valoracions_reals.mean()            #mean calcula la mitjana de allo seleccionat
+                self._avg_item[movie] = valoracions_reals.mean()                    #mean calcula la mitjana de allo seleccionat
             else:
                 self._avg_item[movie] = 0.0
+            
+            self._num_vots_item[movie] = valoracions_reals.size
             
     def calcular_recomanacio(self):
 
         for movie, avg in self._avg_item.items():
+            num_v_item = self._num_vots_item[movie]
 
-            primera_part=((self._num_vots/(self._num_vots+MIN_VOTS))*avg)
-            segona_part=((self._min_vots/(self._num_vots+self._min_vots))*self._avg_general)
+            primera_part=((num_v_item/(num_v_item+MIN_VOTS))*avg)                       #si num_v_item es 0 pot donar 0 iau
+            segona_part=((MIN_VOTS/(num_v_item+MIN_VOTS))*self._avg_general) 
 
             self._recomanacio_final[movie]=primera_part+segona_part
 
@@ -85,15 +93,14 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
     _usuaris_similars: dict
     _usuari_a_comparar: int
 
-    def __init__(self,gestionador:Gestionador):
+    def __init__(self,gestionador:Gestionador_MOVIES):
         """Inicialitza la classe RecomanacioColaborativa_Movie amb un gestionador de dades."""
         super().__init__(gestionador)
         self._usuaris_similars= dict()
         self._usuari_a_comparar=0
     
     def trobar_similituds(self, userID:int):
-        dades = self._gestionador.get_matriu_dades() #mirar de ficar un super 
-        usuaris=self._gestionador.get_dict_usuaris()
+        dades = self._gestionador.get_matriu_dades() 
         usuaris_index=self._gestionador.get_usuari_index()
 
         similituds=dict()
@@ -155,24 +162,26 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
 
         #Calcul de la mitjana individual del usuari a comparar.
         llista_user=dades[usuaris_index[self._usuari_a_comparar],:]
-        mitjana_user=[llista_user[llista_user>0].mean() if len(llista_user[llista_user>0])>0 else 0.0]
+        mitjana_user=llista_user[llista_user>0].mean() if len(llista_user[llista_user>0])>0 else 0.0
 
-        
+        #Calcul del total de les similituts
+        total_similituts=sum([s[0] for s in dict_similituds.values()]) #aixo si es 0 peta
 
-        #selecioneo unes determinades files de la matriu
-        files=[usuaris_index[IDuser] for IDuser in dict_similituds]
-        
+        #Fila per saber si ja ha vist la pelicula o no.
+        fila_nou_usuari = dades[usuaris_index[self._usuari_a_comparar], :]
+
         for movie, columna in movies_index.items():
+            if fila_nou_usuari[columna] > 0:  
+                continue
             sumatori=0
             for user, fila in usuaris_index.items():
                 if user in dict_similituds:
-                    notes=dades[fila,columna]
-                    for nota in notes:
+                    nota=dades[fila,columna]
+                    if nota>0:
                         similitut=dict_similituds[user][0]
                         mitjana=dict_similituds[user][1]
 
                         sumatori+=similitut*(nota-mitjana)
-            total_similituts=sum([s[0] for s in dict_similituds.values()])
             divisio=sumatori/total_similituts
 
             total=mitjana_user+divisio
@@ -183,6 +192,15 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
             #com executem el fitxer
         
 class RecomanacioBasadaContingut_Movie(Recomanacio_Movie):
+
+    def __init__(self,gestionador:Gestionador_MOVIES):
+        super().__init__(gestionador)
+        self._matriu_generes=np.array
+        self._matriu_generes_ponderats=np.array
+        self._dict_similituts=dict()
+
+    def trobar_similituds(self):
+        dades_movies=self._gestionador.get__dict_contingut()
 
 
     
