@@ -180,8 +180,12 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
             self._recomanacio_final[movie]=total 
 
             #on esta pinckle
-            com executem el fitxer
+            #com executem el fitxer
+        
+class RecomanacioBasadaContingut_Movie(Recomanacio_Movie):
 
+
+    
 
 
 
