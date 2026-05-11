@@ -83,7 +83,7 @@ class Gestionador_BOOKS:
 
     #def importar_dades_contingut(self, nomfitxer,sep):
     #def importar_dades_usuaris(self, nomfitxer,sep):
-    #getters
+    
 
 #gestionador MOVIES
 class Gestionador_MOVIES:
