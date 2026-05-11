@@ -180,7 +180,7 @@ class RecomanacioSimple(Recomanacio):
     _avg_general: float
     _avg_item: dict
     _num_vots: int
-    _min_vots:int
+    
 
     def __init__(self,gestionador: Gestionador):
         super().__init__(gestionador)
@@ -188,9 +188,9 @@ class RecomanacioSimple(Recomanacio):
         self._avg_general=0
         self._avg_item={}
         self._num_vots=0
-        self._min_vots=0
+        
 
-    def trobar_similituds(self,min_vots:int, usuari:Usuari): #importa si al int que entro li canvio el nom?
+    def trobar_similituds(self, usuari:Usuari): #importa si al int que entro li canvio el nom?
         dades = self._gestionador.get_matriu_dades()
 
         #calcul avg_general i avg_item i num_vots
@@ -210,7 +210,7 @@ class RecomanacioSimple(Recomanacio):
         
         self._avg_general=sumatori_total/valoracions_total
         self._num_vots=valoracions_total
-        self._min_vots=k
+        self._min_vots=min_vots
         
     def calcular_recomanacio(self):
         primera_part=((self._num_vots/(self._num_vots+self._min_vots))*self._avg_item)
@@ -230,6 +230,7 @@ class RecomanacioColaborativa(Recomanacio):
     def __init__(self,gestionador:Gestionador):
         super().__init__(gestionador)
         self._usuaris_similars: List = []
+        
     
     def trobar_similituds(self,k:int, userID:int):
         dades = self._gestionador.get_matriu_dades() #mirar de ficar un super 

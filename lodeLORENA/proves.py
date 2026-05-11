@@ -37,4 +37,4 @@ class GESTIONADOR():
 
                 matriu_dades[fila][columna] = rating
 
-
+#expl¡mple complet de pickle
