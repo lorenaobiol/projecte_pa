@@ -86,6 +86,7 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
     _usuari_a_comparar: int
 
     def __init__(self,gestionador:Gestionador):
+        """Inicialitza la classe RecomanacioColaborativa_Movie amb un gestionador de dades."""
         super().__init__(gestionador)
         self._usuaris_similars= dict()
         self._usuari_a_comparar=0
@@ -160,7 +161,7 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
 
         #selecioneo unes determinades files de la matriu
         files=[usuaris_index[IDuser] for IDuser in dict_similituds]
-        matriu=dades[files]
+        
         for movie, columna in movies_index.items():
             sumatori=0
             for user, fila in usuaris_index.items():
@@ -176,7 +177,10 @@ class RecomanacioColaborativa_Movie(Recomanacio_Movie):
 
             total=mitjana_user+divisio
             
-            self._recomanacio_final[movie]=total #quans afagixo a la recomanacio final? el NUM_RECOMANACIONS?
+            self._recomanacio_final[movie]=total 
+
+            #on esta pinckle
+            com executem el fitxer
 
 
 
