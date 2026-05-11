@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from typing import List, Dict
 import csv
 
+
+#fem amb numpy i llibres fem dins 10 mil i busquem usuari
 class Gestionador:
 
     _matriu_dades: list
@@ -17,16 +19,6 @@ class Gestionador:
         self._usuari_index  = {}
         self._contingut_index = {}
 
-    def get_matriu_dades(self): 
-        return self._matriu_dades
-    def get_dict_contingut(self): 
-        return self._dict_contingut
-    def get_dict_usuaris(self): 
-        return self._dict_usuaris
-    def get_usuari_index(self): 
-        return self._usuari_index
-    def get_contingut_index(self): 
-        return self._contingut_index
 
     
     def importar_dades(self, nomfitxer,sep):
@@ -61,6 +53,17 @@ class Gestionador:
         self._matriu_dades = matriu_dades
         self._usuari_index = usuari_index
         self._contingut_index = idcont_index
+
+    def get_matriu_dades(self): 
+        return self._matriu_dades
+    def get_dict_contingut(self): 
+        return self._dict_contingut
+    def get_dict_usuaris(self): 
+        return self._dict_usuaris
+    def get_usuari_index(self): 
+        return self._usuari_index
+    def get_contingut_index(self): 
+        return self._contingut_index
 
     #def importar_dades_contingut(self, nomfitxer,sep):
     #def importar_dades_usuaris(self, nomfitxer,sep):
