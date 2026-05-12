@@ -47,7 +47,7 @@ class RecomanacioSimple(Recomanacio_Llibre):
         self._num_vots = 0
         self._num_vots_item = {}
 
-    #PQ UTILITZEM USUARI
+    
     def trobar_similituds(self, usuari: Usuari):
 
         dades = self._gestionador.get_matriu_dades()
@@ -66,11 +66,8 @@ class RecomanacioSimple(Recomanacio_Llibre):
 
         # calcular avg de cada llibre
         for llibre, columna in book_index.items():
-
             valoracions = dades[:, columna]
-
             valoracions_reals = valoracions[valoracions > 0]
-
             if valoracions_reals.size > 0:
                 self._avg_item[llibre] = valoracions_reals.mean()
             else:
@@ -84,7 +81,7 @@ class RecomanacioSimple(Recomanacio_Llibre):
 
             num_v_item = self._num_vots_item[llibre]
 
-            # opcional: descartar items amb pocs vots
+            # MIRAR SI HO POSEM: descartar items amb pocs vots
             if num_v_item < MIN_VOTS:
                 continue
 
@@ -189,7 +186,6 @@ class RecomanacioColaborativa(Recomanacio_Llibre):
                     mitjana_usuari = notes.mean()
                 else:
                     mitjana_usuari = 0.0
-
                 dict_similituds[IDuser].append(mitjana_usuari)
 
         # mitjana del usuari actual
@@ -239,8 +235,7 @@ class RecomanacioColaborativa(Recomanacio_Llibre):
             total = mitjana_user + divisio
 
             self._recomanacio_final[llibre] = total
-            #on esta pinckle
-            #com executem el fitxer
+           
 
 #EL POSEM TMB A MOVIES?
     def __str__(self):

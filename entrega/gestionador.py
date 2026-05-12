@@ -51,9 +51,6 @@ class Gestionador_BOOKS:
                 idcont = linia[1]
                 rating = float(linia[2])
 
-                if rating == 0:
-                    continue
-
                 if user_id not in usuari_index:
                     usuari_index[user_id] = len(usuari_index)
 
