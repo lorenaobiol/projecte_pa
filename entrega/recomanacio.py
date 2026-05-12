@@ -7,6 +7,7 @@ from entrega.usuari import Usuari
 from entrega.config import *
 from math import sqrt
 import logging
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 #visualitzar!!
@@ -199,7 +200,7 @@ class RecomanacioBasadaContingut(Recomanacio):
     def __init__(self,gestionador:Gestionador):
         super().__init__(gestionador)
         self._matriu_generes=np.array
-        self._matriu_generes_ponderats=np.array
+        self._matriu_generes_ponderats=None
         self._dict_similituts=dict()
 
     def trobar_similituds(self, iduser:int):
@@ -208,8 +209,68 @@ class RecomanacioBasadaContingut(Recomanacio):
             raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
 
         dades_movies=self._gestionador.get_dict_contingut()
+        movies_index=self._gestionador.get_contingut_index()
+        dades=self._gestionador.get_matriu_dades()
+
+        #representacio tf-idf
+        item_features = [' '.join(dades_movies[movie].get_generes()) for movie in movies_index]
+        tfidf = TfidfVectorizer(stop_words='english')
+        tfidf_matrix = tfidf.fit_transform(item_features).toarray()
+        self._matriu_generes_ponderats=tfidf_matrix
+
+
+        #ficar lo q ve ara a calcular recomanacio.
+        #perfil d'usuari
+        perfil_usuari=list()
+
+        #puntuacions usuari
+        puntuacions_usuari=dades[self._gestionador.get_usuari_index()[iduser],:]
+
+
+        #multiplicacio i suma
+        for fila in movies_index.values():
+            puntuacions_movies=tfidf_matrix[fila, :]
+            sumatori=0
+            for puntuacio1,puntuacio2 in zip(puntuacions_usuari,puntuacions_movies):
+                sumatori*=puntuacio1*puntuacio2
+            
+            ptotal=sum(puntuacio for puntuacio in puntuacions_movies)
+            perfil_usuari.append(ptotal)
+
+        #distancia cosinus i puntuacio final
+        similitut_item=list()
+        usuari_p=sqrt(sum(punt**2 for punt in perfil_usuari))
+        
+        
+        for fila in movies_index.values():
+            puntuacions_movies=tfidf_matrix[fila, :]
+            tfidf_p=sqrt(sum(punt**2 for punt in puntuacions_movies))
+            
+            sumatori=0
+            for puntuacio1,puntuacio2 in zip(similitut_item,puntuacions_movies):
+                sumatori+=puntuacio1*puntuacio2
+
+            similitut_item.append(sumatori/(usuari_p*tfidf_p))
 
         
+        
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

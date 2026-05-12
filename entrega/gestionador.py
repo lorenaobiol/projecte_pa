@@ -12,7 +12,6 @@ class Gestionador:
 
     _matriu_dades: list
     _dict_contingut: Dict[str, 'Contingut']
-    _dict_usuaris: Dict[int, 'Usuari']
     _usuari_index: Dict[int, int]
     _contingut_index: Dict[str, int]
     _tipus_contingut: str
@@ -20,7 +19,6 @@ class Gestionador:
     def __init__(self, tipus_contingut: str):
         self._matriu_dades = []
         self._dict_contingut = {}
-        self._dict_usuaris = {}
         self._usuari_index  = {}
         self._contingut_index = {}
         self._tipus_contingut = tipus_contingut
@@ -28,7 +26,6 @@ class Gestionador:
 
     def get_matriu_dades(self): return self._matriu_dades
     def get_dict_contingut(self): return self._dict_contingut
-    def get_dict_usuaris(self): return self._dict_usuaris
     def get_usuari_index(self): return self._usuari_index
     def get_contingut_index(self): return self._contingut_index
     def get_tipus_contingut(self): return self._tipus_contingut
