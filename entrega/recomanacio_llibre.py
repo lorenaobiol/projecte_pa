@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict
 import numpy as np
 
-from entrega.gestionador import Gestionador_BOOKS
+from entrega.gestionador import Gestionador
 from entrega.usuari import Usuari
 from entrega.config import *
 
@@ -10,9 +10,9 @@ from entrega.config import *
 class Recomanacio_Llibre(ABC):
 
     _recomanacio_final: dict
-    _gestionador: Gestionador_BOOKS
+    _gestionador: Gestionador
 
-    def __init__(self, gestionador: Gestionador_BOOKS):
+    def __init__(self, gestionador: Gestionador):
         self._recomanacio_final = dict()
         self._gestionador = gestionador
 
@@ -39,7 +39,7 @@ class RecomanacioSimple(Recomanacio_Llibre):
     _num_vots: int
     _num_vots_item: dict
 
-    def __init__(self, gestionador: Gestionador_BOOKS):
+    def __init__(self, gestionador: Gestionador):
         super().__init__(gestionador)
 
         self._avg_general = 0
