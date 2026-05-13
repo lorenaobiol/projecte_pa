@@ -3,7 +3,6 @@ from typing import List, Dict
 import csv
 from entrega.contingut import *
 from entrega.config import *
-from entrega.usuari import Usuari
 import numpy as np
 
 
@@ -91,5 +90,16 @@ class Gestionador:
                 contingut=Movie(movieid,titol,generes)
 
                 self._dict_contingut[movieid]=contingut
+
+    def mostrar_punutacions_usuari(self, iduser:int):
+
+        fila=self._usuari_index[iduser]
+
+        for contingut, columna in self._contingut_index.items():
+            valor_rating=self._matriu_dades[fila, columna]
+            print('Continugut:',contingut, 'Puntuació:',valor_rating)
+    
+    def mostrar_
+
     
    

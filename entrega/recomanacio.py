@@ -9,7 +9,7 @@ from math import sqrt
 import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-
+#canviar tots los movies per contingut(mes general)
 #visualitzar!!
 class Recomanacio(ABC):
 
@@ -26,7 +26,17 @@ class Recomanacio(ABC):
     @abstractmethod
     def calcular_recomanacio(self): return NotImplementedError
     @abstractmethod
-    def __str__(self) -> str: return NotImplementedError
+
+    def __str__(self):
+
+        if self._recomanacio_final:
+            print('Llista de les punutacions de la Recomanació Colaborativa')
+            resultat = str()
+            for cont, score in self._recomanacio_final.items():
+                resultat += f"{cont}: {score:.2f}\n"
+            return resultat
+        else:
+            return "No s'ha calculat cap recomanació encara."
 
 
 
@@ -82,11 +92,8 @@ class RecomanacioSimple(Recomanacio):
             self._recomanacio_final[movie]=primera_part+segona_part
 
     def __str__(self):
+        super().__str__()
 
-        resultat = str()
-        for llibre, score in sorted(self._recomanacio_final.items(),key=lambda x: x[1],reverse=True):
-            resultat += f"{llibre}: {score:.2f}\n"
-        return resultat
 
 
 class RecomanacioColaborativa(Recomanacio):
@@ -133,6 +140,8 @@ class RecomanacioColaborativa(Recomanacio):
             similituds[IDuser] = 0.0 if denominador == 0 else numerador / denominador
         
         self._usuaris_similars= similituds
+
+        return self._recomanacio_final
 
     def calcular_recomanacio(self):
         dades = self._gestionador.get_matriu_dades()
@@ -192,8 +201,12 @@ class RecomanacioColaborativa(Recomanacio):
             
             self._recomanacio_final[movie]=total 
 
+            return self._recomanacio_final
             #on esta pinckle
             #com executem el fitxer
+
+    def __str__(self):
+        super().__str__()
         
 class RecomanacioBasadaContingut(Recomanacio):
 
@@ -202,6 +215,7 @@ class RecomanacioBasadaContingut(Recomanacio):
         self._matriu_generes=np.array
         self._matriu_generes_ponderats=None
         self._dict_similituts=dict()
+        self._usuari: int =None
 
     def trobar_similituds(self, iduser:int):
 
@@ -210,7 +224,8 @@ class RecomanacioBasadaContingut(Recomanacio):
 
         dades_movies=self._gestionador.get_dict_contingut()
         movies_index=self._gestionador.get_contingut_index()
-        dades=self._gestionador.get_matriu_dades()
+        
+        
 
         #representacio tf-idf
         item_features = [' '.join(dades_movies[movie].get_generes()) for movie in movies_index]
@@ -218,39 +233,53 @@ class RecomanacioBasadaContingut(Recomanacio):
         tfidf_matrix = tfidf.fit_transform(item_features).toarray()
         self._matriu_generes_ponderats=tfidf_matrix
 
+        self._usuari=iduser
 
+    
+    def calcular_recomanacio(self):
         #ficar lo q ve ara a calcular recomanacio.
+        dades=self._gestionador.get_matriu_dades()
+        movies_index=self._gestionador.get_contingut_index()
         #perfil d'usuari
-        perfil_usuari=list()
+        perfil_usuari=np.zeros(self._matriu_generes_ponderats.shape[1])
 
         #puntuacions usuari
-        puntuacions_usuari=dades[self._gestionador.get_usuari_index()[iduser],:]
+
+        puntuacions_usuari=dades[self._gestionador.get_usuari_index()[self._usuari],:]
 
 
         #multiplicacio i suma
-        for fila in movies_index.values():
-            puntuacions_movies=tfidf_matrix[fila, :]
-            sumatori=0
-            for puntuacio1,puntuacio2 in zip(puntuacions_usuari,puntuacions_movies):
-                sumatori*=puntuacio1*puntuacio2
-            
-            ptotal=sum(puntuacio for puntuacio in puntuacions_movies)
-            perfil_usuari.append(ptotal)
+        for movie, fila in movies_index.items():
+            rating = puntuacions_usuari[fila]
+            tfidf_movie = self._matriu_generes_ponderats[fila, :]
+            perfil_usuari += rating * tfidf_movie
 
+        perfil_usuari /= puntuacions_usuari.sum()
         #distancia cosinus i puntuacio final
-        similitut_item=list()
+        similitut_item=dict()
         usuari_p=sqrt(sum(punt**2 for punt in perfil_usuari))
         
         
-        for fila in movies_index.values():
-            puntuacions_movies=tfidf_matrix[fila, :]
+        for movie,fila in movies_index.items():
+            puntuacions_movies=self._matriu_generes_ponderats[fila, :]
             tfidf_p=sqrt(sum(punt**2 for punt in puntuacions_movies))
             
             sumatori=0
-            for puntuacio1,puntuacio2 in zip(similitut_item,puntuacions_movies):
+            for puntuacio1,puntuacio2 in zip(perfil_usuari,puntuacions_movies):
                 sumatori+=puntuacio1*puntuacio2
 
-            similitut_item.append(sumatori/(usuari_p*tfidf_p))
+            if usuari_p == 0 or tfidf_p == 0:
+                similitut_item[movie] = 0.0
+                continue
+
+            similitut_item[movie]=(sumatori/(usuari_p*tfidf_p))*PMAX
+        
+        self._recomanacio_final=similitut_item
+
+        return self._recomanacio_finalç
+    
+    def __str__(self):
+        super().__str__()
 
         
         
