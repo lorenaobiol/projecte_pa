@@ -89,6 +89,10 @@ class Recomanacio(ABC):
                 Text formatat amb les puntuacions.
         """
 
+        #mostrar el nom de la peli o llibre i la puntuacio.
+        #llibre: isbn, titul, autor, any, editorial
+        #movies: id , titul i generes
+
         # Si ja s'han calculat recomanacions
         if self._recomanacio_final:
 
@@ -96,7 +100,7 @@ class Recomanacio(ABC):
                 "Llista de les puntuacions "
                 "de la Recomanació\n"
             )
-
+            #!!!!!!!! if llibre o movie:
             # Recorrem totes les recomanacions
             for cont, score in self._recomanacio_final.items():
 
@@ -201,6 +205,9 @@ class RecomanacioSimple(Recomanacio):
         """
         Calcula la puntuació final de cada contingut.
         """
+
+        #falta el nou usuari
+
 
         # Recorrem cada contingut i la seva mitjana
         for movie, avg in self._avg_item.items():
@@ -328,7 +335,6 @@ class RecomanacioColaborativa(Recomanacio):
 
         self._usuaris_similars = similituds
 
-        return self._recomanacio_final
 
     def calcular_recomanacio(self):
         """

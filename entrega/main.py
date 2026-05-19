@@ -11,7 +11,6 @@ from entrega.config import *
 from entrega.avaluacio import *
 from entrega.gestionador import *
 from entrega.recomanacio import *
-from
 import numpy as np
 
 def inicialitzar (nom_fitxer_pickle:str):
@@ -43,9 +42,16 @@ def inicialitzar (nom_fitxer_pickle:str):
 gestionador, metode = inicialitzar('gestionador.pkl')
 
 if metode == 1:
-    recomanador = RecomanacioSimple(gestionador)    
+    recomanador = RecomanacioSimple(gestionador) 
+    RecomanacioSimple.trobar_similituds()
+    final=RecomanacioSimple.calcular_recomanacio()
+    print(final)   
 elif metode == 2:
     recomanador = RecomanacioColaborativa(gestionador)
+    usuari=input('Introdueix el id del usuari amb qui vols comparar:')
 elif metode == 3:
     recomanador = RecomanacioBasadaContingut(gestionador)
+    usuari=input('Introdueix el id del usuari amb qui vols comparar:')
+
+
 
