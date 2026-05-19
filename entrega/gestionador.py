@@ -82,14 +82,26 @@ class Gestionador:
             csv_reader = csv.reader(csv_file, delimiter=sep)
             next(csv_reader)  
 
-            for linia in csv_reader:
-                movieid= int(linia[0])
-                titol = linia[1]
-                generes = linia[2].split('|') 
+            if self._tipus_contingut == 'MOVIES':
+                for linia in csv_reader:
+                    movieid= int(linia[0])
+                    titol = linia[1]
+                    generes = linia[2].split('|') 
 
-                contingut=Movie(movieid,titol,generes)
+                    contingut=Movie(movieid,titol,generes)
 
-                self._dict_contingut[movieid]=contingut
+                    self._dict_contingut[movieid]=contingut
+            
+            elif self._tipus_contingut == 'BOOKS':
+                for linia in csv_reader:
+                    isbn = linia[0]
+                    titol = linia[1]
+                    autor = linia[2]
+                    any_publicacio = int(linia[3])
+
+                    contingut=Llibre(isbn,titol,autor,any_publicacio)
+
+                    self._dict_contingut[isbn]=contingut
 
     def mostrar_punutacions_usuari(self, iduser:int):
 
@@ -99,7 +111,6 @@ class Gestionador:
             valor_rating=self._matriu_dades[fila, columna]
             print('Continugut:',contingut, 'Puntuació:',valor_rating)
     
-    def mostrar_
-
+    
     
    

@@ -1,5 +1,17 @@
-from abc import ABC, abstractmethod 
-from typing import List, Dict
+#canviar tots los movies per contingut(mes general)
+#visualitzar!!
+
+"""
+Mòdul de recomanacions.
+
+Aquest fitxer conté les diferents estratègies de recomanació:
+- Recomanació simple
+- Recomanació col·laborativa
+- Recomanació basada en contingut
+"""
+
+from abc import ABC, abstractmethod
+from typing import Dict
 import numpy as np
 from entrega.gestionador import *
 from entrega.contingut import Contingut
@@ -9,80 +21,131 @@ from math import sqrt
 import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-#canviar tots los movies per contingut(mes general)
-#visualitzar!!
+logging.basicConfig(
+    filename='log.txt',
+    level=logging.INFO,
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+)
+
 class Recomanacio(ABC):
 
     _recomanacio_final: dict
     _gestionador: Gestionador
+    _usuari_a_comparar: int
 
     def __init__(self,gestionador: Gestionador):
         self._recomanacio_final = dict()
         self._gestionador = gestionador
-    
+        self._usuari_a_comparar = 0
+        logging.info(f"Recomanació inicialitzada")
+
     def get_recomanacio_final(self): return self._recomanacio_final
+
     @abstractmethod
-    def trobar_similituds(self): return NotImplementedError
+    def trobar_similituds(self): raise NotImplementedError
+
     @abstractmethod
-    def calcular_recomanacio(self): return NotImplementedError
-    @abstractmethod
+    def calcular_recomanacio(self): raise NotImplementedError
 
     def __str__(self):
 
         if self._recomanacio_final:
-            print('Llista de les punutacions de la Recomanació Colaborativa')
+            logging.info(f"Recomanació final calculada i preparada per a visualització")
             resultat = str()
-            for cont, score in self._recomanacio_final.items():
-                resultat += f"{cont}: {score:.2f}\n"
+            if self._gestionador.get_tipus_contingut() == 'BOOKS':
+                logging.info("Visualitzant recomanació per a BOOKS")
+
+                for cont, score in self._recomanacio_final.items():
+                    info = self._gestionador.get_dict_contingut()[cont]
+                    titol=info.get_titol()
+                    codi=info.get_isbn()
+                    autor=info.get_autor()
+                    any=info.get_any()
+                    resultat += f"{titol}\nPuntuació:{score:.2f}\nInformació del llibre: (ISBN: {codi}, Autor: {autor}, Any: {any})\n\n"
+    
+            elif self._gestionador.get_tipus_contingut() == 'MOVIES':
+                logging.info("Visualitzant recomanació per a MOVIES")
+                
+                for cont, score in self._recomanacio_final.items():
+                    info = self._gestionador.get_dict_contingut()[cont]
+                    titol=info.get_titol()
+                    generes=', '.join(info.get_generes())
+                    resultat += f"{titol}\nPuntuació:{score:.2f}\nInformació de la pel·lícula: (Codi: {cont}, Gèneres: {generes})\n\n"
+
+            else:
+                logging.warning(f"Recomanació no calculada")
+                return "No s'han calculat recomanacions"
+
+            print('Resultats:')
+            logging.info(f"Recomanació visualitzada per a l'usuari {self._usuari_a_comparar}")
             return resultat
-        else:
-            return "No s'ha calculat cap recomanació encara."
-
-
 
 
 class RecomanacioSimple(Recomanacio):
-    
+
     _avg_general: float
     _avg_item: dict
     _num_vots: int
     _num_vots_item: dict
 
-
-    def __init__(self,gestionador: Gestionador):
+    def __init__(self, gestionador: Gestionador):
         super().__init__(gestionador)
     
         self._avg_general=0
         self._avg_item={}
         self._num_vots=0
-        self._num_vots_item=dict() #acabar
-     
+        self._num_vots_item=dict() 
 
-    def trobar_similituds(self, iduser:int): 
+    def trobar_similituds(self, ):
+        """
+        Calcula les mitjanes globals i per contingut.
+
+        Args:
+            iduser (int):
+                ID de l'usuari.
+        """
+
         dades = self._gestionador.get_matriu_dades()
         movie_index=self._gestionador.get_contingut_index()
 
-        self._num_vots=np.count_nonzero(dades) #conto els vots que son 0?
+        self._num_vots=np.count_nonzero(dades) 
     
         sumatori= dades.sum()
         self._avg_general= sumatori / self._num_vots if self._num_vots > 0 else 0.0
 
         for movie, columna in movie_index.items():
             valoracio=dades[:,columna]                                              #agafo tota la fila i una columna
-            valoracions_reals=valoracio[valoracio>0]                                 #agafo sol les valoracions que son diferents de 0
+            valoracions_reals=valoracio[valoracio>0]                                #agafo sol les valoracions que son diferents de 0
 
+            # Si hi ha valoracions
             if valoracions_reals.size > 0:
                 self._avg_item[movie] = valoracions_reals.mean()                    #mean calcula la mitjana de allo seleccionat
             else:
                 self._avg_item[movie] = 0.0
             
             self._num_vots_item[movie] = valoracions_reals.size
+
+            logging.info(f"Similituds trobades per a recomanació simple")
             
     def calcular_recomanacio(self):
+        """
+        Calcula la puntuació final de cada contingut.
+        """
 
+        #falta el nou usuari!!!!!!
+        dades = self._gestionador.get_matriu_dades()
+        fila_usuari = dades[self._gestionador.get_usuari_index()[self._usuari_a_comparar], :]
+
+
+        # Recorrem cada contingut i la seva mitjana
         for movie, avg in self._avg_item.items():
-            num_v_item = self._num_vots_item[movie]
 
+            columna = self._gestionador.get_contingut_index()[movie]
+            
+            if fila_usuari[columna] > 0:  # saltar perquè és usuari actual
+                continue
+            
+            num_v_item = self._num_vots_item[movie]
             if num_v_item < MIN_VOTS:
                 continue
 
@@ -91,36 +154,37 @@ class RecomanacioSimple(Recomanacio):
 
             self._recomanacio_final[movie]=primera_part+segona_part
 
+            logging.info(f"Recomanació calculada per a recomanació simple")
+
     def __str__(self):
-        super().__str__()
+        return super().__str__()
 
 
 
 class RecomanacioColaborativa(Recomanacio):
 
     _usuaris_similars: dict
-    _usuari_a_comparar: int
+    
 
-    def __init__(self,gestionador:Gestionador):
-        '''Inicialitza la classe RecomanacioColaborativa_Movie amb un gestionador de dades.'''
+    def __init__(self, gestionador: Gestionador):
+
         super().__init__(gestionador)
         self._usuaris_similars= dict()
-        self._usuari_a_comparar=0
+        
     
-    def trobar_similituds(self, userID:int):
+    def trobar_similituds(self,):
         dades = self._gestionador.get_matriu_dades() 
         usuaris_index=self._gestionador.get_usuari_index()
 
         similituds=dict()
         
-        fila_usuari_actual=usuaris_index[userID]
+        fila_usuari_actual=usuaris_index[self._usuari_a_comparar]
         valoracions_u_act=dades[fila_usuari_actual,:]
 
         
         for IDuser,fila in usuaris_index.items():
 
-            if IDuser == userID:                                        # No cal comparar l'usuari amb ell mateix
-                self._usuari_a_comparar = userID
+            if IDuser == self._usuari_a_comparar:                                        # No cal comparar l'usuari amb ell mateix
                 continue
 
             valoracions=dades[fila,:]
@@ -141,9 +205,10 @@ class RecomanacioColaborativa(Recomanacio):
         
         self._usuaris_similars= similituds
 
-        return self._recomanacio_final
+        logging.info(f"Similituds trobades per a recomanació col·laborativa")
 
-    def calcular_recomanacio(self):
+
+    def calcular_recomanacio(self,):
         dades = self._gestionador.get_matriu_dades()
         usuaris_index=self._gestionador.get_usuari_index()
         movies_index=self._gestionador.get_contingut_index()
@@ -201,10 +266,8 @@ class RecomanacioColaborativa(Recomanacio):
             
             self._recomanacio_final[movie]=total 
 
-            return self._recomanacio_final
-            #on esta pinckle
-            #com executem el fitxer
-
+            logging.info(f"Recomanació calculada per a recomanació col·laborativa")
+            
     def __str__(self):
         super().__str__()
         
@@ -215,16 +278,15 @@ class RecomanacioBasadaContingut(Recomanacio):
         self._matriu_generes=np.array
         self._matriu_generes_ponderats=None
         self._dict_similituts=dict()
-        self._usuari: int =None
+        
 
-    def trobar_similituds(self, iduser:int):
+    def trobar_similituds(self):
 
         if self._gestionador.get_tipus_contingut()=='BOOKS':
             raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
 
         dades_movies=self._gestionador.get_dict_contingut()
         movies_index=self._gestionador.get_contingut_index()
-        
         
 
         #representacio tf-idf
@@ -233,10 +295,11 @@ class RecomanacioBasadaContingut(Recomanacio):
         tfidf_matrix = tfidf.fit_transform(item_features).toarray()
         self._matriu_generes_ponderats=tfidf_matrix
 
-        self._usuari=iduser
+        logging.info(f"Similituds trobades per a recomanació basada en contingut")
+
 
     
-    def calcular_recomanacio(self):
+    def calcular_recomanacio(self ):
         #ficar lo q ve ara a calcular recomanacio.
         dades=self._gestionador.get_matriu_dades()
         movies_index=self._gestionador.get_contingut_index()
@@ -245,7 +308,7 @@ class RecomanacioBasadaContingut(Recomanacio):
 
         #puntuacions usuari
 
-        puntuacions_usuari=dades[self._gestionador.get_usuari_index()[self._usuari],:]
+        puntuacions_usuari=dades[self._gestionador.get_usuari_index()[self._usuari_a_comparar],:]
 
 
         #multiplicacio i suma
@@ -255,6 +318,7 @@ class RecomanacioBasadaContingut(Recomanacio):
             perfil_usuari += rating * tfidf_movie
 
         perfil_usuari /= puntuacions_usuari.sum()
+
         #distancia cosinus i puntuacio final
         similitut_item=dict()
         usuari_p=sqrt(sum(punt**2 for punt in perfil_usuari))
@@ -269,14 +333,15 @@ class RecomanacioBasadaContingut(Recomanacio):
                 sumatori+=puntuacio1*puntuacio2
 
             if usuari_p == 0 or tfidf_p == 0:
+
                 similitut_item[movie] = 0.0
                 continue
 
             similitut_item[movie]=(sumatori/(usuari_p*tfidf_p))*PMAX
         
         self._recomanacio_final=similitut_item
+        logging.info(f"Recomanació calculada per a recomanació basada en contingut")
 
-        return self._recomanacio_finalç
     
     def __str__(self):
         super().__str__()

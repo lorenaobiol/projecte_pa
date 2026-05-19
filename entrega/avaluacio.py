@@ -42,6 +42,16 @@ class Avaluacio(ABC):
         self._resultat_RMSE=sqrt(sumatori/len(items))
 
         return self._resultat_RMSE
+    
+    def __str__(self) -> str:
+
+        if self._resultat_MAE != 0:
+            return f"MAE: {self._resultat_MAE}"
+        elif self._resultat_RMSE != 0: 
+            return f"RMSE: {self._resultat_RMSE}"
+        
+        return "No s'ha calculat cap avaluacio"
+
 
         
 
