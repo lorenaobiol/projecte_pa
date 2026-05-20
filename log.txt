@@ -1,0 +1,13 @@
+2026-05-20 11:53:21,360 | root | INFO | Gestionador inicialitzat amb MovieLens100k
+2026-05-20 11:53:21,405 | root | INFO | Gestionador guardat a pickle: gestionador.pkl
+2026-05-20 11:54:23,641 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-20 11:54:29,863 | root | INFO | Entrada seleccionada: 1
+2026-05-20 12:12:48,117 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-20 12:13:22,748 | root | INFO | Entrada seleccionada: 1
+2026-05-20 12:13:33,584 | root | INFO | Usuari seleccionat: 1
+2026-05-20 12:16:22,010 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-20 12:16:29,476 | root | INFO | Entrada seleccionada: 1
+2026-05-20 12:16:30,523 | root | INFO | Usuari seleccionat: 1
+2026-05-20 12:18:25,759 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-20 12:18:29,025 | root | INFO | Entrada seleccionada: 1
+2026-05-20 12:18:31,189 | root | INFO | Usuari seleccionat: 1
