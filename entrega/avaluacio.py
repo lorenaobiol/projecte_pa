@@ -51,14 +51,3 @@ class Avaluacio(ABC):
             return f"RMSE: {self._resultat_RMSE}"
         
         return "No s'ha calculat cap avaluacio"
-
-
-        
-
-
-
-
-
-
-
-
