@@ -300,7 +300,7 @@ class RecomanacioBasadaContingut(Recomanacio):
 
 
     
-    def calcular_recomanacio(self ):
+    def calcular_recomanacio(self):
         #ficar lo q ve ara a calcular recomanacio.
         dades=self._gestionador.get_matriu_dades()
         movies_index=self._gestionador.get_contingut_index()
