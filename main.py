@@ -10,13 +10,6 @@ from gestionador import *
 from recomanacio import *
 import sys
 import logging
-from datetime import datetime
-
-
-def get_data():
-    date_time = datetime.now()
-    str_date_time = date_time.strftime("%d-%m-%Y, %H:%M:%S")
-    return str_date_time
 
 
 def inicialitzar (nom_fitxer_pickle:str, tipus):

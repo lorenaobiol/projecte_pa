@@ -4,7 +4,14 @@ import csv
 from contingut import *
 from config import *
 import numpy as np
+import logging
 
+logging.basicConfig(
+
+    filename='log '+ get_data() +'.txt',
+    level=logging.INFO,
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+    )
 
 #gestionador BOOKS
 class Gestionador:
@@ -21,6 +28,7 @@ class Gestionador:
         self._usuari_index  = {}
         self._contingut_index = {}
         self._tipus_contingut = tipus_contingut
+        logging.info(f"Inicialització del gestionador per al tipus de contingut: {tipus_contingut}")
 
 
     def get_matriu_dades(self): return self._matriu_dades
@@ -82,6 +90,8 @@ class Gestionador:
 
         self._usuari_index = usuari_index
         self._contingut_index = idcont_index
+        logging.info(f"Dades importades des de {nomfitxer}. Nombre d'usuaris: {num_usuaris}, Nombre de continguts: {num_items}")
+        logging.info(f"Diccionaris i matriu de dades creada correctament amb forma: {self._matriu_dades.shape}")
 
     def importar_dades_contingut(self, nomfitxer,sep):
         path="./dataset/"
@@ -107,8 +117,8 @@ class Gestionador:
             elif self._tipus_contingut == 'BOOKS':
                 #associar usuaris als llibres
                 for linia in csv_reader:
+                    isbn = linia[0]
                     if isbn in self._dict_contingut:
-                        isbn = linia[0]
                         titol = linia[1]
                         autor = linia[2]
                         any_publicacio = int(linia[3])
@@ -116,6 +126,8 @@ class Gestionador:
                         contingut=Llibre(isbn,titol,autor,any_publicacio)
 
                         self._dict_contingut[isbn]=contingut
+        logging.info(f"Dades de contingut importades des de {nomfitxer}. Nombre de continguts: {len(self._dict_contingut)}")
+        logging.info("Diccionari de contingut creat correctament")
 
     def mostrar_punutacions_usuari(self, iduser:int):
 

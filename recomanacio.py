@@ -1,5 +1,4 @@
-#canviar tots los movies per contingut(mes general)
-#visualitzar!!
+
 
 """
 Mòdul de recomanacions.
@@ -107,24 +106,24 @@ class RecomanacioSimple(Recomanacio):
         """
 
         dades = self._gestionador.get_matriu_dades()
-        movie_index=self._gestionador.get_contingut_index()
+        cont_index=self._gestionador.get_contingut_index()
 
         self._num_vots=np.count_nonzero(dades) 
     
         sumatori= dades.sum()
         self._avg_general= sumatori / self._num_vots if self._num_vots > 0 else 0.0
 
-        for movie, columna in movie_index.items():
+        for cont, columna in cont_index.items():
             valoracio=dades[:,columna]                                              #agafo tota la fila i una columna
             valoracions_reals=valoracio[valoracio>0]                                #agafo sol les valoracions que son diferents de 0
 
             # Si hi ha valoracions
             if valoracions_reals.size > 0:
-                self._avg_item[movie] = valoracions_reals.mean()                    #mean calcula la mitjana de allo seleccionat
+                self._avg_item[cont] = valoracions_reals.mean()                    #mean calcula la mitjana de allo seleccionat
             else:
-                self._avg_item[movie] = 0.0
+                self._avg_item[cont] = 0.0
             
-            self._num_vots_item[movie] = valoracions_reals.size
+            self._num_vots_item[cont] = valoracions_reals.size
 
             logging.info(f"Similituds trobades per a recomanació simple")
             
@@ -139,21 +138,21 @@ class RecomanacioSimple(Recomanacio):
 
 
         # Recorrem cada contingut i la seva mitjana
-        for movie, avg in self._avg_item.items():
+        for cont, avg in self._avg_item.items():
 
-            columna = self._gestionador.get_contingut_index()[movie]
+            columna = self._gestionador.get_contingut_index()[cont]
             
             if fila_usuari[columna] > 0:  # saltar perquè és usuari actual
                 continue
             
-            num_v_item = self._num_vots_item[movie]
+            num_v_item = self._num_vots_item[cont]
             if num_v_item < MIN_VOTS:
                 continue
 
             primera_part=((num_v_item/(num_v_item+MIN_VOTS))*avg)                       #si num_v_item es 0 pot donar 0 iau
             segona_part=((MIN_VOTS/(num_v_item+MIN_VOTS))*self._avg_general) 
 
-            self._recomanacio_final[movie]=primera_part+segona_part
+            self._recomanacio_final[cont]=primera_part+segona_part
 
             logging.info(f"Recomanació calculada per a recomanació simple")
 
@@ -212,7 +211,7 @@ class RecomanacioColaborativa(Recomanacio):
     def calcular_recomanacio(self):
         dades = self._gestionador.get_matriu_dades()
         usuaris_index=self._gestionador.get_usuari_index()
-        movies_index=self._gestionador.get_contingut_index()
+        cont_index=self._gestionador.get_contingut_index()
 
         dict_similituds=dict()
 
@@ -249,7 +248,7 @@ class RecomanacioColaborativa(Recomanacio):
         #Fila per sawhereber si ja ha vist la pelicula o no.
         fila_nou_usuari = dades[usuaris_index[self._usuari_a_comparar], :]
 
-        for movie, columna in movies_index.items():
+        for cont, columna in cont_index.items():
             if fila_nou_usuari[columna] > 0:  
                 continue
             sumatori=0
@@ -265,7 +264,7 @@ class RecomanacioColaborativa(Recomanacio):
 
             total=mitjana_user+divisio
             
-            self._recomanacio_final[movie]=total 
+            self._recomanacio_final[cont]=total 
 
             logging.info(f"Recomanació calculada per a recomanació col·laborativa")
             
@@ -301,19 +300,21 @@ class RecomanacioBasadaContingut(Recomanacio):
 
     
     def calcular_recomanacio(self):
-        #ficar lo q ve ara a calcular recomanacio.
+
+        if self._gestionador.get_tipus_contingut()=='BOOKS':
+            raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
+        
         dades=self._gestionador.get_matriu_dades()
-        movies_index=self._gestionador.get_contingut_index()
+        cont_index=self._gestionador.get_contingut_index()
         #perfil d'usuari
         perfil_usuari=np.zeros(self._matriu_generes_ponderats.shape[1])
 
         #puntuacions usuari
-
         puntuacions_usuari=dades[self._gestionador.get_usuari_index()[self._usuari_a_comparar],:]
 
 
         #multiplicacio i suma
-        for movie, fila in movies_index.items():
+        for movie, fila in cont_index.items():
             rating = puntuacions_usuari[fila]
             tfidf_movie = self._matriu_generes_ponderats[fila, :]
             perfil_usuari += rating * tfidf_movie
@@ -325,7 +326,7 @@ class RecomanacioBasadaContingut(Recomanacio):
         usuari_p=sqrt(sum(punt**2 for punt in perfil_usuari))
         
         
-        for movie,fila in movies_index.items():
+        for movie,fila in cont_index.items():
             puntuacions_movies=self._matriu_generes_ponderats[fila, :]
             tfidf_p=sqrt(sum(punt**2 for punt in puntuacions_movies))
             
@@ -347,63 +348,5 @@ class RecomanacioBasadaContingut(Recomanacio):
     def __str__(self):
         super().__str__()
 
-        
-        
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def calcular_recomanacio(self):
-        
-        if self._gestionador.get_tipus_contingut()=='BOOKS':
-            raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
-
-
     
-
-
-
-
-
-
-                
-
-
-                
-
-
-
-
-
-            
-
-
-            
-
-
-        
-
-        
-
 
