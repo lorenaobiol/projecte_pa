@@ -1,8 +1,0 @@
-2026-05-26 21:40:38,707 | root | INFO | Inicialització del gestionador per al tipus de contingut: MOVIES
-2026-05-26 21:40:38,855 | root | INFO | Dades importades des de ratings.csv. Nombre d'usuaris: 610, Nombre de continguts: 9724
-2026-05-26 21:40:38,855 | root | INFO | Diccionaris i matriu de dades creada correctament amb forma: (610, 9724)
-2026-05-26 21:40:38,876 | root | INFO | Dades de contingut importades des de movies.csv. Nombre de continguts: 9742
-2026-05-26 21:40:38,876 | root | INFO | Diccionari de contingut creat correctament
-2026-05-26 21:40:38,876 | root | INFO | Gestionador inicialitzat amb MovieLens100k
-2026-05-26 21:40:38,909 | root | INFO | Gestionador guardat a pickle: gestionador.pkl
-2026-05-26 21:41:07,153 | root | INFO | Entrada seleccionada: 1

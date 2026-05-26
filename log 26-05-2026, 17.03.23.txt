@@ -1,5 +1,0 @@
-2026-05-26 17:03:24,109 | numexpr.utils | INFO | NumExpr defaulting to 16 threads.
-2026-05-26 17:03:24,378 | root | WARNING | Argument de tipus no vàlid o no proporcionat: None
-2026-05-26 17:03:24,398 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
-2026-05-26 17:03:28,284 | root | INFO | Entrada seleccionada: 
-2026-05-26 17:03:28,284 | root | INFO | Programa finalitzat correctament

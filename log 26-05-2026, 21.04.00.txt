@@ -1,6 +1,0 @@
-2026-05-26 21:04:01,193 | root | INFO | Inicialització del gestionador per al tipus de contingut: BOOKS
-2026-05-26 21:04:02,428 | root | INFO | Dades importades des de Ratings.csv. Nombre d'usuaris: 105283, Nombre de continguts: 10000
-2026-05-26 21:04:02,428 | root | INFO | Diccionaris i matriu de dades creada correctament amb forma: (105283, 10000)
-2026-05-26 21:04:02,433 | root | INFO | Gestionador inicialitzat amb Books
-2026-05-26 21:04:06,829 | root | INFO | Gestionador guardat a pickle: gestionador.pkl
-2026-05-26 21:04:12,694 | root | INFO | Entrada seleccionada: 1
