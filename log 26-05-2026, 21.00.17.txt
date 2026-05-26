@@ -1,0 +1,3 @@
+2026-05-26 21:00:24,698 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-26 21:00:26,062 | root | INFO | Entrada seleccionada: 
+2026-05-26 21:00:26,062 | root | INFO | Programa finalitzat correctament

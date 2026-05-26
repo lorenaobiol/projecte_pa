@@ -1,0 +1,15 @@
+2026-05-26 21:45:52,370 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-26 21:45:59,273 | root | INFO | Entrada seleccionada: 1
+2026-05-26 21:46:02,293 | root | INFO | Usuari seleccionat: 20
+2026-05-26 21:46:02,293 | root | INFO | Recomanació inicialitzada
+2026-05-26 21:46:02,293 | root | INFO | Recomanacio col·laborativa seleccionada per l'usuari: 20
+2026-05-26 21:46:02,308 | root | INFO | Similituds trobades per a recomanació col·laborativa
+2026-05-26 21:46:02,646 | root | INFO | Recomanació calculada per a recomanació col·laborativa
+2026-05-26 21:46:02,649 | root | INFO | Recomanacio calculada per a l'usuari: 20
+2026-05-26 21:46:02,650 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-26 21:46:02,650 | root | INFO | Visualitzant recomanació per a MOVIES
+2026-05-26 21:46:02,650 | root | INFO | Recomanació visualitzada per a l'usuari 20
+2026-05-26 21:47:08,275 | root | INFO | Usuari seleccionat: 30
+2026-05-26 21:47:09,709 | root | INFO | Avaluació inicialitzada per a l'usuari: 30 amb el recomanador: RecomanacioColaborativa
+2026-05-26 21:47:09,710 | root | INFO | Resultat de RMSE: 0.0, calculat per a l'usuari 30
+2026-05-26 21:52:21,854 | root | INFO | Programa finalitzat correctament

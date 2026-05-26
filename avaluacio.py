@@ -32,40 +32,40 @@ class Avaluacio(ABC):
         self._resultat_MAE=sumatori/len(items)
 
         return self._resultat_MAE'''
-
+    
+        self._recomanador.calcular_recomanacio(mode_avaluacio=True)
+        dict_recomanacio = self._recomanador.get_recomanacio_final()
         
-        cont_index = self._gestionador.get_contingut_index()
-        recomanador = self._recomanador
-        gestionador = self._gestionador
-
-    # Recalculem prediccions per a items que l'usuari JA ha puntuat
         sumatori = 0
         items_avaluats = 0
-
-        for idcont, columna in cont_index.items():
+        for idcont, p_reco in dict_recomanacio.items():
+            columna = self._gestionador.get_contingut_index()[idcont]
             p_usuari = self._punt_usuari[columna]
-            if p_usuari == 0:
-                continue  # Només avaluem el que ha vist
+        
+            if p_usuari != 0:
+                sumatori += abs(p_reco - p_usuari)
+                items_avaluats += 1
 
-            # agafar les pelis que a ha vist
-            p_reco = recomanador.get_recomanacio_final().get(idcont)
-            if p_reco is None:
-                continue
-
-            sumatori += abs(p_reco - p_usuari)
-            items_avaluats += 1
 
         self._resultat_MAE = sumatori / items_avaluats if items_avaluats > 0 else 0
         return self._resultat_MAE
     
     def calcular_RMSE(self):
 
+        self._recomanador.calcular_recomanacio(mode_avaluacio=True)
         dict_recomanacio=self._recomanador.get_recomanacio_final()
 
-        sumatori=sum((p_reco-p_usuari)**2 for  p_reco,p_usuari in zip(dict_recomanacio.values(),self._punt_usuari) if p_usuari != 0)
-        items=[it for it in self._punt_usuari if it!=0]
+        sumatori = 0
+        items_avaluats = 0
+        for idcont, p_reco in dict_recomanacio.items():
+            columna = self._gestionador.get_contingut_index()[idcont]
+            p_usuari = self._punt_usuari[columna]
 
-        self._resultat_RMSE=sqrt(sumatori/len(items))
+            if p_usuari != 0:  #sol sagafen les q son diferents d zero? ala diapositiva diu q les agafa totes
+                sumatori += (p_reco - p_usuari) ** 2 
+                items_avaluats += 1
+
+        self._resultat_RMSE = sqrt(sumatori / items_avaluats) if items_avaluats > 0 else 0
 
         return self._resultat_RMSE
     
@@ -75,4 +75,5 @@ class Avaluacio(ABC):
             return f"MAE: {self._resultat_MAE}"
         elif self._resultat_RMSE != 0: 
             return f"RMSE: {self._resultat_RMSE}"
+        return 'No es pot avaluar'
         

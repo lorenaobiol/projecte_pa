@@ -29,6 +29,7 @@ def inicialitzar (nom_fitxer_pickle:str, tipus):
     elif tipus==2:
         gestionador = Gestionador(tipus_contingut='BOOKS')
         gestionador.importar_dades('Ratings.csv', ',')
+        gestionador.importar_dades_contingut('Books.csv', ',')
         logging.info("Gestionador inicialitzat amb Books")
         
     
@@ -37,7 +38,7 @@ def inicialitzar (nom_fitxer_pickle:str, tipus):
 
         logging.info(f"Gestionador guardat a pickle: {nom_fitxer_pickle}")
 
-    return gestionador, tipus
+    return gestionador
 
 def main():
 
@@ -130,6 +131,12 @@ if __name__ == "__main__":
 
     logging.shutdown()
 
+
+'''
+- el rmse inclou les q son zero?
+- podem avaluar davan de la recomnanacio en un usuari al que no hem fet la recomacio?
+
+'''
 
 
 

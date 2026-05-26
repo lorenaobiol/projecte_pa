@@ -1,0 +1,22 @@
+2026-05-26 21:31:54,312 | root | INFO | Inicialització del gestionador per al tipus de contingut: BOOKS
+2026-05-26 21:31:55,652 | root | INFO | Dades importades des de Ratings.csv. Nombre d'usuaris: 105283, Nombre de continguts: 10000
+2026-05-26 21:31:55,653 | root | INFO | Diccionaris i matriu de dades creada correctament amb forma: (105283, 10000)
+2026-05-26 21:31:56,430 | root | INFO | Dades de contingut importades des de Books.csv. Nombre de continguts: 8627
+2026-05-26 21:31:56,430 | root | INFO | Diccionari de contingut creat correctament
+2026-05-26 21:31:56,431 | root | INFO | Gestionador inicialitzat amb Books
+2026-05-26 21:32:00,949 | root | INFO | Gestionador guardat a pickle: gestionador.pkl
+2026-05-26 21:32:06,155 | root | INFO | Entrada seleccionada: 1
+2026-05-26 21:32:13,651 | root | INFO | Usuari seleccionat: 226965
+2026-05-26 21:32:13,652 | root | INFO | Recomanació inicialitzada
+2026-05-26 21:32:13,652 | root | INFO | Recomanacio simple seleccionada per l'usuari: 226965
+2026-05-26 21:32:29,801 | root | INFO | Similituds trobades per a recomanació simple
+2026-05-26 21:32:29,809 | root | INFO | Recomanació calculada per a recomanació simple
+2026-05-26 21:32:29,809 | root | INFO | Recomanacio calculada per a l'usuari: 226965
+2026-05-26 21:32:29,809 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-26 21:32:29,809 | root | INFO | Visualitzant recomanació per a BOOKS
+2026-05-26 21:32:29,810 | root | INFO | Recomanació visualitzada per a l'usuari 226965
+2026-05-26 21:33:34,645 | root | INFO | Usuari seleccionat: 226965
+2026-05-26 21:33:36,626 | root | INFO | Avaluació inicialitzada per a l'usuari: 226965 amb el recomanador: RecomanacioSimple
+2026-05-26 21:33:36,633 | root | INFO | Recomanació calculada per a recomanació simple
+2026-05-26 21:33:36,637 | root | INFO | Resultat de MAE: 0.7493769293342464, calculat per a l'usuari 226965
+2026-05-26 21:33:41,608 | root | INFO | Programa finalitzat correctament

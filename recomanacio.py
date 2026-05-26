@@ -55,8 +55,9 @@ class Recomanacio(ABC):
             if self._gestionador.get_tipus_contingut() == 'BOOKS':
                 logging.info("Visualitzant recomanació per a BOOKS")
 
-
                 for cont, score in self._recomanacio_final.items():
+                    if cont not in self._gestionador.get_dict_contingut():  # ← afegeix això
+                        continue
                     info = self._gestionador.get_dict_contingut()[cont]
                     titol=info.get_titol()
                     codi=info.get_isbn()
@@ -130,11 +131,11 @@ class RecomanacioSimple(Recomanacio):
 
         logging.info(f"Similituds trobades per a recomanació simple")
             
-    def calcular_recomanacio(self):
+    def calcular_recomanacio(self, mode_avaluacio=False):
         """
         Calcula la puntuació final de cada contingut.
         """
-
+        
         #falta el nou usuari!!!!!!
         dades = self._gestionador.get_matriu_dades()
         fila_usuari = dades[self._gestionador.get_usuari_index()[self._usuari_a_comparar], :]
@@ -145,7 +146,7 @@ class RecomanacioSimple(Recomanacio):
 
             columna = self._gestionador.get_contingut_index()[cont]
             
-            if fila_usuari[columna] > 0:  # saltar perquè és usuari actual
+            if not mode_avaluacio and fila_usuari[columna] > 0:  # saltar perquè és usuari actual
                 continue
             
             num_v_item = self._num_vots_item[cont]
@@ -158,8 +159,14 @@ class RecomanacioSimple(Recomanacio):
             dict_prov[cont]=primera_part+segona_part
 
         sorted_dict = dict(sorted(dict_prov.items(), key=lambda item: item[1], reverse=True))
-        self._recomanacio_final = dict(list(sorted_dict.items())[:NUM_RECOMANACIONS])
         
+        if mode_avaluacio:
+            #Filtrem només els que l'usuari ha vist
+            vistos = {cont: score for cont, score in sorted_dict.items() 
+              if fila_usuari[self._gestionador.get_contingut_index()[cont]] > 0}
+            self._recomanacio_final = dict(list(vistos.items())[:NUM_RECOMANACIONS])
+        else:
+            self._recomanacio_final = dict(list(sorted_dict.items())[:NUM_RECOMANACIONS])
         logging.info(f"Recomanació calculada per a recomanació simple")
 
     def __str__(self):
@@ -214,7 +221,7 @@ class RecomanacioColaborativa(Recomanacio):
         logging.info(f"Similituds trobades per a recomanació col·laborativa")
 
 
-    def calcular_recomanacio(self):
+    def calcular_recomanacio(self, mode_avaluacio=False):
         dades = self._gestionador.get_matriu_dades()
         usuaris_index=self._gestionador.get_usuari_index()
         cont_index=self._gestionador.get_contingut_index()
@@ -255,7 +262,7 @@ class RecomanacioColaborativa(Recomanacio):
         fila_nou_usuari = dades[usuaris_index[self._usuari_a_comparar], :]
 
         for cont, columna in cont_index.items():
-            if fila_nou_usuari[columna] > 0:  
+            if not mode_avaluacio and fila_nou_usuari[columna] > 0:  
                 continue
             sumatori=0
             for user, fila in usuaris_index.items():
@@ -270,12 +277,18 @@ class RecomanacioColaborativa(Recomanacio):
 
             total=mitjana_user+divisio
             
-            self._recomanacio_final[cont]=total 
+            self._recomanacio_final[cont]=total
+
+        if mode_avaluacio:
+            vistos = {cont: score for cont, score in self._recomanacio_final.items() if fila_nou_usuari[cont_index[cont]] > 0}
+            self._recomanacio_final = dict(list(vistos.items())[:NUM_RECOMANACIONS])
+        else:
+            self._recomanacio_final = dict(list(sorted(self._recomanacio_final.items(), key=lambda x: x[1], reverse=True))[:NUM_RECOMANACIONS]) 
 
         logging.info(f"Recomanació calculada per a recomanació col·laborativa")
             
     def __str__(self):
-        super().__str__()
+        return super().__str__()
         
 class RecomanacioBasadaContingut(Recomanacio):
 
@@ -305,7 +318,7 @@ class RecomanacioBasadaContingut(Recomanacio):
 
 
     
-    def calcular_recomanacio(self):
+    def calcular_recomanacio(self, mode_avaluacio=False):
 
         if self._gestionador.get_tipus_contingut()=='BOOKS':
             raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
@@ -345,14 +358,25 @@ class RecomanacioBasadaContingut(Recomanacio):
                 similitut_item[movie] = 0.0
                 continue
 
+            if not mode_avaluacio and puntuacions_usuari[fila] > 0:  # ← aquí
+                similitut_item[movie] = 0.0
+                continue
+
             similitut_item[movie]=(sumatori/(usuari_p*tfidf_p))*PMAX
         
-        self._recomanacio_final=similitut_item
+        sorted_sim = dict(sorted(similitut_item.items(), key=lambda x: x[1], reverse=True))
+
+        if mode_avaluacio:
+            vistos = {cont: score for cont, score in sorted_sim.items() if puntuacions_usuari[cont_index[cont]] > 0}
+            self._recomanacio_final = dict(list(vistos.items())[:NUM_RECOMANACIONS])
+        else:
+            self._recomanacio_final = dict(list(sorted_sim.items())[:NUM_RECOMANACIONS])
+        
         logging.info(f"Recomanació calculada per a recomanació basada en contingut")
 
     
     def __str__(self):
-        super().__str__()
+        return super().__str__()
 
     
 

@@ -1,0 +1,12 @@
+2026-05-26 21:26:15,343 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-26 21:26:20,055 | root | INFO | Entrada seleccionada: 1
+2026-05-26 21:26:41,716 | root | INFO | Usuari seleccionat: 226965
+2026-05-26 21:26:41,716 | root | INFO | Recomanació inicialitzada
+2026-05-26 21:26:41,716 | root | INFO | Recomanacio simple seleccionada per l'usuari: 226965
+2026-05-26 21:26:56,198 | root | INFO | Similituds trobades per a recomanació simple
+2026-05-26 21:26:56,211 | root | INFO | Recomanació calculada per a recomanació simple
+2026-05-26 21:26:56,211 | root | INFO | Recomanacio calculada per a l'usuari: 226965
+2026-05-26 21:26:56,211 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-26 21:26:56,212 | root | INFO | Visualitzant recomanació per a BOOKS
+2026-05-26 21:26:56,212 | root | INFO | Recomanació visualitzada per a l'usuari 226965
+2026-05-26 21:28:12,623 | root | INFO | Programa finalitzat correctament
