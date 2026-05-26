@@ -48,11 +48,13 @@ class Recomanacio(ABC):
 
     def __str__(self):
 
+
         if self._recomanacio_final:
             logging.info(f"Recomanació final calculada i preparada per a visualització")
             resultat = str()
             if self._gestionador.get_tipus_contingut() == 'BOOKS':
                 logging.info("Visualitzant recomanació per a BOOKS")
+
 
                 for cont, score in self._recomanacio_final.items():
                     info = self._gestionador.get_dict_contingut()[cont]
@@ -66,6 +68,7 @@ class Recomanacio(ABC):
                 logging.info("Visualitzant recomanació per a MOVIES")
                 
                 for cont, score in self._recomanacio_final.items():
+            
                     info = self._gestionador.get_dict_contingut()[cont]
                     titol=info.get_titol()
                     generes=', '.join(info.get_generes())
@@ -125,7 +128,7 @@ class RecomanacioSimple(Recomanacio):
             
             self._num_vots_item[cont] = valoracions_reals.size
 
-            logging.info(f"Similituds trobades per a recomanació simple")
+        logging.info(f"Similituds trobades per a recomanació simple")
             
     def calcular_recomanacio(self):
         """
@@ -136,7 +139,7 @@ class RecomanacioSimple(Recomanacio):
         dades = self._gestionador.get_matriu_dades()
         fila_usuari = dades[self._gestionador.get_usuari_index()[self._usuari_a_comparar], :]
 
-
+        dict_prov=dict()
         # Recorrem cada contingut i la seva mitjana
         for cont, avg in self._avg_item.items():
 
@@ -152,9 +155,12 @@ class RecomanacioSimple(Recomanacio):
             primera_part=((num_v_item/(num_v_item+MIN_VOTS))*avg)                       #si num_v_item es 0 pot donar 0 iau
             segona_part=((MIN_VOTS/(num_v_item+MIN_VOTS))*self._avg_general) 
 
-            self._recomanacio_final[cont]=primera_part+segona_part
+            dict_prov[cont]=primera_part+segona_part
 
-            logging.info(f"Recomanació calculada per a recomanació simple")
+        sorted_dict = dict(sorted(dict_prov.items(), key=lambda item: item[1], reverse=True))
+        self._recomanacio_final = dict(list(sorted_dict.items())[:NUM_RECOMANACIONS])
+        
+        logging.info(f"Recomanació calculada per a recomanació simple")
 
     def __str__(self):
         return super().__str__()
@@ -266,7 +272,7 @@ class RecomanacioColaborativa(Recomanacio):
             
             self._recomanacio_final[cont]=total 
 
-            logging.info(f"Recomanació calculada per a recomanació col·laborativa")
+        logging.info(f"Recomanació calculada per a recomanació col·laborativa")
             
     def __str__(self):
         super().__str__()

@@ -1,0 +1,24 @@
+2026-05-26 17:12:39,401 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-26 17:12:42,988 | root | INFO | Entrada seleccionada: 1
+2026-05-26 17:12:45,141 | root | INFO | Usuari seleccionat: 20
+2026-05-26 17:12:45,141 | root | INFO | Recomanació inicialitzada
+2026-05-26 17:12:45,142 | root | INFO | Recomanacio simple seleccionada per l'usuari: 20
+2026-05-26 17:12:45,236 | root | INFO | Similituds trobades per a recomanació simple
+2026-05-26 17:12:45,782 | root | INFO | Recomanació calculada per a recomanació simple
+2026-05-26 17:12:45,783 | root | INFO | Recomanacio calculada per a l'usuari: 20
+2026-05-26 17:12:45,783 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-26 17:12:45,783 | root | INFO | Visualitzant recomanació per a MOVIES
+2026-05-26 17:12:45,784 | root | INFO | Recomanació visualitzada per a l'usuari 20
+2026-05-26 17:12:49,259 | root | INFO | Usuari seleccionat: 10
+2026-05-26 17:12:50,515 | root | INFO | Avaluació inicialitzada per a l'usuari: 10 amb el recomanador: RecomanacioSimple
+2026-05-26 17:12:50,515 | root | INFO | Resultat de MAE: 3.739103527054583, calculat per a l'usuari 10
+2026-05-26 17:13:07,950 | root | INFO | Usuari seleccionat: 30
+2026-05-26 17:13:07,950 | root | INFO | Recomanació inicialitzada
+2026-05-26 17:13:07,950 | root | INFO | Recomanacio simple seleccionada per l'usuari: 30
+2026-05-26 17:13:08,045 | root | INFO | Similituds trobades per a recomanació simple
+2026-05-26 17:13:08,696 | root | INFO | Recomanació calculada per a recomanació simple
+2026-05-26 17:13:08,696 | root | INFO | Recomanacio calculada per a l'usuari: 30
+2026-05-26 17:13:08,696 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-26 17:13:08,696 | root | INFO | Visualitzant recomanació per a MOVIES
+2026-05-26 17:13:08,697 | root | INFO | Recomanació visualitzada per a l'usuari 30
+2026-05-26 17:15:16,860 | root | INFO | Programa finalitzat correctament
