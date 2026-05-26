@@ -1,5 +1,4 @@
 #parametres globals
-
 MIN_VOTS=3 #simple
 NUM_RECOMANACIONS=5 #simple i colab
 sep=','

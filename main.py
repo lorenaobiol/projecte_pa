@@ -135,7 +135,8 @@ if __name__ == "__main__":
 '''
 - el rmse inclou les q son zero?
 - podem avaluar davan de la recomnanacio en un usuari al que no hem fet la recomacio?
-
+- fa falta logging a contingut?
+- les cosees evidents cal documentar-les?
 '''
 
 

@@ -27,28 +27,65 @@ logging.basicConfig(
 )
 
 class Recomanacio(ABC):
+    """
+    Classe abstracta que defineix l'estructura base d'un sistema de recomanació.
+ 
+    Attributes:
+        _recomanacio_final (dict): Diccionari amb els continguts recomanats i les seves puntuacions.
+        _gestionador (Gestionador): Objecte que gestiona les dades del sistema.
+        _usuari_a_comparar (int): Identificador de l'usuari per al qual es fa la recomanació.
+    """
 
     _recomanacio_final: dict
     _gestionador: Gestionador
     _usuari_a_comparar: int
 
     def __init__(self,gestionador: Gestionador, usuari_a_comparar: int):
+        """Inicialitza la recomanació amb el gestionador i l'usuari a comparar.
+ 
+        Args:
+            gestionador (Gestionador): Objecte que gestiona les dades del sistema.
+            usuari_a_comparar (int): Identificador de l'usuari per al qual es fa la recomanació.
+        """
+
         self._recomanacio_final = dict()
         self._gestionador = gestionador
         self._usuari_a_comparar = usuari_a_comparar
         logging.info(f"Recomanació inicialitzada")
 
-    def get_recomanacio_final(self): return self._recomanacio_final
+    def get_recomanacio_final(self): 
+        """Retorna el diccionari amb la recomanació final calculada.
+ 
+        Returns:
+            dict: Diccionari amb els continguts recomanats i les seves puntuacions.
+        """
+        return self._recomanacio_final
 
     @abstractmethod
-    def trobar_similituds(self): raise NotImplementedError
+    def trobar_similituds(self): 
+        """Mètode abstracte per trobar similituds entre usuaris o continguts.
+ 
+        Raises:
+            NotImplementedError: Si la subclasse no implementa aquest mètode.
+        """
+        raise NotImplementedError
 
     @abstractmethod
-    def calcular_recomanacio(self): raise NotImplementedError
+    def calcular_recomanacio(self): 
+        """Mètode abstracte per calcular la recomanació final.
+ 
+        Raises:
+            NotImplementedError: Si la subclasse no implementa aquest mètode.
+        """
+        raise NotImplementedError
 
     def __str__(self):
-
-
+        """Retorna una representació en text de la recomanació final.
+ 
+        Returns:
+            str: Text formatat amb els títols, puntuacions i informació de cada contingut recomanat.
+                 Retorna un missatge d'error si no s'han calculat recomanacions.
+        """
         if self._recomanacio_final:
             logging.info(f"Recomanació final calculada i preparada per a visualització")
             resultat = str()
@@ -85,7 +122,17 @@ class Recomanacio(ABC):
 
 
 class RecomanacioSimple(Recomanacio):
-    ''''''
+    """Recomanació simple basada en mitjanes globals i per contingut.
+ 
+    Utilitza la fórmula de Bayesian Average per ponderar la puntuació de cada
+    contingut combinant la seva mitjana individual amb la mitjana global.
+ 
+    Attributes:
+        _avg_general (float): Mitjana global de totes les valoracions del sistema.
+        _avg_item (dict): Diccionari amb la mitjana de valoracions per a cada contingut.
+        _num_vots (int): Nombre total de valoracions al sistema.
+        _num_vots_item (dict): Diccionari amb el nombre de valoracions per a cada contingut.
+    """
 
     _avg_general: float
     _avg_item: dict
@@ -93,20 +140,24 @@ class RecomanacioSimple(Recomanacio):
     _num_vots_item: dict
 
     def __init__(self, gestionador: Gestionador,usuari_a_comparar: int):
+        """Inicialitza la recomanació simple amb valors per defecte.
+ 
+        Args:
+            gestionador (Gestionador): Objecte que gestiona les dades del sistema.
+            usuari_a_comparar (int): Identificador de l'usuari per al qual es fa la recomanació.
+        """
+
         super().__init__(gestionador,usuari_a_comparar)
-    
         self._avg_general=0
         self._avg_item={}
         self._num_vots=0
         self._num_vots_item=dict() 
 
     def trobar_similituds(self):
-        """
-        Calcula les mitjanes globals i per contingut.
-
-        Args:
-            iduser (int):
-                ID de l'usuari.
+        """Calcula les mitjanes globals i per contingut a partir de la matriu de dades.
+ 
+        Recorre tota la matriu de valoracions per calcular la mitjana global del sistema
+        i la mitjana individual de cada contingut, ignorant les valoracions amb valor 0.
         """
 
         dades = self._gestionador.get_matriu_dades()
@@ -132,11 +183,17 @@ class RecomanacioSimple(Recomanacio):
         logging.info(f"Similituds trobades per a recomanació simple")
             
     def calcular_recomanacio(self, mode_avaluacio=False):
+        """Calcula la puntuació final de cada contingut mitjançant Bayesian Average.
+ 
+        Aplica la fórmula: score = (n/(n+m))*avg_item + (m/(n+m))*avg_general,
+        on n és el nombre de vots del contingut i m és el mínim de vots requerit.
+        Els continguts ja valorats per l'usuari s'exclouen tret que s'estigui en mode avaluació.
+ 
+        Args:
+            mode_avaluacio (bool): Si és True, inclou continguts ja valorats per l'usuari
+                per permetre l'avaluació del sistema. Per defecte és False.
         """
-        Calcula la puntuació final de cada contingut.
-        """
-        
-        #falta el nou usuari!!!!!!
+    
         dades = self._gestionador.get_matriu_dades()
         fila_usuari = dades[self._gestionador.get_usuari_index()[self._usuari_a_comparar], :]
 
@@ -170,22 +227,46 @@ class RecomanacioSimple(Recomanacio):
         logging.info(f"Recomanació calculada per a recomanació simple")
 
     def __str__(self):
+        """Retorna una representació en text de la recomanació simple.
+ 
+        Returns:
+            str: Text formatat heretat de la classe base Recomanacio.
+        """
         return super().__str__()
 
 
 
 class RecomanacioColaborativa(Recomanacio):
+    """Recomanació col·laborativa basada en similitud cosinus entre usuaris.
+ 
+    Identifica els usuaris més similars a l'usuari objectiu i genera recomanacions
+    ponderant les seves valoracions per la similitud respectiva.
+ 
+    Attributes:
+        _usuaris_similars (dict): Diccionari que mapeja cada ID d'usuari amb la seva
+            similitud cosinus respecte a l'usuari a comparar.
+    """
 
     _usuaris_similars: dict
     
-
     def __init__(self, gestionador: Gestionador,usuari_a_comparar: int):
+        """Inicialitza la recomanació col·laborativa.
+ 
+        Args:
+            gestionador (Gestionador): Objecte que gestiona les dades del sistema.
+            usuari_a_comparar (int): Identificador de l'usuari per al qual es fa la recomanació.
+        """
 
         super().__init__(gestionador, usuari_a_comparar)
         self._usuaris_similars= dict()
         
     
     def trobar_similituds(self):
+        """Calcula la similitud cosinus entre l'usuari objectiu i la resta d'usuaris.
+ 
+        Només considera les valoracions en comú (on ambdós usuaris han puntuat
+        el mateix contingut). Si no hi ha valoracions en comú, la similitud és 0.
+        """
         dades = self._gestionador.get_matriu_dades() 
         usuaris_index=self._gestionador.get_usuari_index()
 
@@ -222,6 +303,11 @@ class RecomanacioColaborativa(Recomanacio):
 
 
     def calcular_recomanacio(self, mode_avaluacio=False):
+        """Calcula la similitud cosinus entre l'usuari objectiu i la resta d'usuaris.
+ 
+        Només considera les valoracions en comú (on ambdós usuaris han puntuat
+        el mateix contingut). Si no hi ha valoracions en comú, la similitud és 0.
+        """
         dades = self._gestionador.get_matriu_dades()
         usuaris_index=self._gestionador.get_usuari_index()
         cont_index=self._gestionador.get_contingut_index()
@@ -288,11 +374,41 @@ class RecomanacioColaborativa(Recomanacio):
         logging.info(f"Recomanació calculada per a recomanació col·laborativa")
             
     def __str__(self):
+        """Retorna una representació en text de la recomanació col·laborativa.
+ 
+        Returns:
+            str: Text formatat heretat de la classe base Recomanacio.
+        """
         return super().__str__()
         
 class RecomanacioBasadaContingut(Recomanacio):
+    """Recomanació basada en contingut usant TF-IDF per calcular similituds entre gèneres.
+ 
+    Construeix un perfil d'usuari a partir de les valoracions existents i els vectors
+    TF-IDF dels gèneres de les pel·lícules, i utilitza la distància cosinus per
+    recomanar els continguts més similars al perfil.
+ 
+    Attributes:
+        _matriu_generes (np.array): Matriu binària de gèneres per contingut (sense ponderar).
+        _matriu_generes_ponderats (np.array): Matriu TF-IDF dels gèneres per contingut.
+        _dict_similituts (dict): Diccionari amb les similituds cosinus calculades per contingut.
+ 
+    Raises:
+        NotImplementedError: Si s'intenta usar amb contingut de tipus BOOKS.
+    """
+
+    _matriu_generes: np.array
+    _matriu_generes_ponderats: np.array
+    _dict_similituts: dict
 
     def __init__(self,gestionador:Gestionador,usuari_a_comparar: int):
+        """Inicialitza la recomanació basada en contingut.
+ 
+        Args:
+            gestionador (Gestionador): Objecte que gestiona les dades del sistema.
+            usuari_a_comparar (int): Identificador de l'usuari per al qual es fa la recomanació.
+        """
+
         super().__init__(gestionador,usuari_a_comparar)
         self._matriu_generes=np.array
         self._matriu_generes_ponderats=None
@@ -300,6 +416,15 @@ class RecomanacioBasadaContingut(Recomanacio):
         
 
     def trobar_similituds(self):
+        """Calcula la matriu TF-IDF dels gèneres de les pel·lícules.
+ 
+        Transforma la llista de gèneres de cada pel·lícula en vectors TF-IDF
+        per poder calcular posteriorment la similitud cosinus entre continguts.
+ 
+        Raises:
+            NotImplementedError: Si el tipus de contingut és BOOKS, ja que no
+                disposa de dades de gèneres suficients per a aquest tipus.
+        """
 
         if self._gestionador.get_tipus_contingut()=='BOOKS':
             raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
@@ -319,6 +444,25 @@ class RecomanacioBasadaContingut(Recomanacio):
 
     
     def calcular_recomanacio(self, mode_avaluacio=False):
+        """Calcula la recomanació final basada en el perfil d'usuari i la distància cosinus.
+ 
+        Construeix el perfil d'usuari com la suma ponderada dels vectors TF-IDF
+        dels continguts que ha valorat, normalitzada per la suma de valoracions.
+        Després calcula la similitud cosinus entre el perfil i cada contingut.
+ 
+        Args:
+            mode_avaluacio (bool): Si és True, inclou continguts ja valorats per l'usuari
+                per permetre l'avaluació del sistema. Per defecte és False.
+ 
+        Raises:
+            NotImplementedError: Si el tipus de contingut és BOOKS.
+ 
+        Example:
+            recomanacio = RecomanacioBasadaContingut(gestionador, 123)
+            recomanacio.trobar_similituds()
+            recomanacio.calcular_recomanacio()
+            print(recomanacio)
+        """
 
         if self._gestionador.get_tipus_contingut()=='BOOKS':
             raise NotImplementedError("No és possible fer recomanació basada en contingut amb books per falta de dades")
@@ -376,6 +520,11 @@ class RecomanacioBasadaContingut(Recomanacio):
 
     
     def __str__(self):
+        """Retorna una representació en text de la recomanació basada en contingut.
+ 
+        Returns:
+            str: Text formatat heretat de la classe base Recomanacio.
+        """
         return super().__str__()
 
     
