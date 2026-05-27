@@ -1,0 +1,12 @@
+2026-05-28 00:51:38,962 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-28 00:51:44,952 | root | INFO | Entrada seleccionada: 1
+2026-05-28 00:51:48,804 | root | INFO | Usuari seleccionat: 20
+2026-05-28 00:51:48,805 | root | INFO | Recomanació inicialitzada
+2026-05-28 00:51:48,805 | root | INFO | Recomanacio simple seleccionada per l'usuari: 20
+2026-05-28 00:51:48,893 | root | INFO | Similituds trobades per a recomanació simple
+2026-05-28 00:51:48,902 | root | INFO | Recomanació calculada per a recomanació simple
+2026-05-28 00:51:48,902 | root | INFO | Recomanacio calculada per a l'usuari: 20
+2026-05-28 00:51:48,904 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-28 00:51:48,904 | root | INFO | Visualitzant recomanació per a MOVIES
+2026-05-28 00:51:48,904 | root | INFO | Recomanació visualitzada per a l'usuari 20
+2026-05-28 00:51:51,422 | root | INFO | Programa finalitzat correctament

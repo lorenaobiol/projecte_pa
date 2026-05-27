@@ -1,0 +1,4 @@
+2026-05-28 01:12:15,013 | root | WARNING | Argument de tipus no vàlid o no proporcionat: None
+2026-05-28 01:12:15,036 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-28 01:13:57,510 | root | INFO | Entrada seleccionada: 
+2026-05-28 01:13:57,510 | root | INFO | Programa finalitzat correctament

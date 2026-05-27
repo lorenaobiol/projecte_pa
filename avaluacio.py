@@ -7,21 +7,18 @@ from abc import ABC, abstractmethod
 from typing import List, Dict
 from math import sqrt
 
-logging.basicConfig(
-
-    filename='log '+ get_data() +'.txt',
-    level=logging.INFO,
-    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
-    #handlers= [logging.FileHandler('log '+ get_data() +'.txt'), 
-              #logging.StreamHandler()] 
-    )
 
 class Avaluacio(ABC):
-    """
-    Classe abstracta per avaluar la qualitat d'un sistema de recomanació.
+    """Classe abstracta per avaluar la qualitat d'un sistema de recomanació.
+ 
     Compara les puntuacions recomanades amb les puntuacions reals de l'usuari
     mitjançant les mètriques MAE i RMSE.
-
+ 
+    Attributes:
+        _resultat_MAE (float): Resultat del càlcul del Mean Absolute Error.
+        _resultat_RMSE (float): Resultat del càlcul del Root Mean Square Error.
+        _recomanador (Recomanacio): Objecte de recomanació a avaluar.
+        _punt_usuari (List): Llista amb les puntuacions reals de l'usuari a la matriu de dades.
     """
 
     _resultat_MAE: float
@@ -30,10 +27,14 @@ class Avaluacio(ABC):
     _punt_usuari: List
 
     def __init__(self, recomanador:Recomanacio, iduser:int, gestionador:Gestionador):
-        """
-        Inicialitza l'avaluació amb el recomanador, l'identificador de l'usuari
-        i el gestionador de dades. Obté les puntuacions reals de l'usuari.
-
+        """Inicialitza l'avaluació amb el recomanador, l'identificador de l'usuari i el gestionador.
+ 
+        Obté les puntuacions reals de l'usuari a partir de la matriu de dades del gestionador.
+ 
+        Args:
+            recomanador (Recomanacio): Objecte de recomanació que es vol avaluar.
+            iduser (int): Identificador de l'usuari per al qual es fa l'avaluació.
+            gestionador (Gestionador): Objecte que gestiona les dades del sistema.
         """
 
         logging.debug(f"Inicialitzant Avaluacio per usuari {iduser}")
@@ -47,11 +48,18 @@ class Avaluacio(ABC):
         logging.debug(f"Puntuacions de l'usuari carregades: {self._punt_usuari}")
 
     def calcular_MAE(self):
-        """
-        Calcula el Mean Absolute Error (MAE) entre les puntuacions recomanades
-        i les puntuacions reals de l'usuari. Només té en compte els ítems
-        que l'usuari ha puntuat (puntuació != 0).
-
+        """Calcula el Mean Absolute Error (MAE) entre les puntuacions recomanades i les reals.
+ 
+        Només té en compte els ítems que l'usuari ha puntuat prèviament (puntuació != 0).
+        Crida al recomanador en mode avaluació per obtenir les prediccions sobre ítems ja vistos.
+ 
+        Returns:
+            float: Valor del MAE calculat. Retorna 0 si no hi ha ítems avaluats.
+ 
+        Example:
+            avaluacio = AvaluacioSimple(recomanador, 123, gestionador)
+            mae = avaluacio.calcular_MAE()
+            print(f"MAE: {mae:.4f}")
         """
 
         self._recomanador.calcular_recomanacio(mode_avaluacio=True)
@@ -73,11 +81,19 @@ class Avaluacio(ABC):
         return self._resultat_MAE
     
     def calcular_RMSE(self):
-        """
-        Calcula el Root Mean Square Error (RMSE) entre les puntuacions recomanades
-        i les puntuacions reals de l'usuari. Penalitza més els errors grans.
-        Només té en compte els ítems que l'usuari ha puntuat (puntuació != 0).
-
+        """Calcula el Root Mean Square Error (RMSE) entre les puntuacions recomanades i les reals.
+ 
+        Penalitza més els errors grans en comparació amb el MAE, ja que eleva al quadrat
+        les diferències abans de fer la mitjana. Només té en compte els ítems que l'usuari
+        ha puntuat prèviament (puntuació != 0).
+ 
+        Returns:
+            float: Valor del RMSE calculat. Retorna 0 si no hi ha ítems avaluats.
+ 
+        Example:
+            avaluacio = AvaluacioSimple(recomanador, 123, gestionador)
+            rmse = avaluacio.calcular_RMSE()
+            print(f"RMSE: {rmse:.4f}")
         """
 
         self._recomanador.calcular_recomanacio(mode_avaluacio=True)
@@ -98,10 +114,14 @@ class Avaluacio(ABC):
         return self._resultat_RMSE
     
     def __str__(self) -> str:
-        """
-        Retorna una cadena de text amb el resultat de l'avaluació calculada.
-        Si no s'ha calculat cap mètrica, ho indica.
-
+        """Retorna una cadena de text amb el resultat de l'avaluació calculada.
+ 
+        Comprova quin mètrica s'ha calculat i retorna el seu valor formatat.
+        Si no s'ha calculat cap mètrica, retorna un missatge informatiu.
+ 
+        Returns:
+            str: Cadena amb el nom de la mètrica i el seu valor (ex: "MAE: 0.73"),
+                 o "No es pot avaluar" si no s'ha calculat cap mètrica.
         """
 
         if self._resultat_MAE != 0:

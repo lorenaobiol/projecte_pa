@@ -20,15 +20,6 @@ from math import sqrt
 import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-logging.basicConfig(
-
-    filename='log '+ get_data() +'.txt',
-    level=logging.INFO,
-    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
-    #handlers= [logging.FileHandler('log '+ get_data() +'.txt'), 
-              #logging.StreamHandler()] 
-    )
-
 class Recomanacio(ABC):
     """
     Classe abstracta que defineix l'estructura base d'un sistema de recomanació.

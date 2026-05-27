@@ -13,6 +13,12 @@ import logging
 
 
 def inicialitzar (nom_fitxer_pickle:str, tipus):
+
+    if tipus is None:
+        logging.warning("No s'ha introduït cap nombre al executar-lo")
+        print('Ha hagut un error')
+        return None
+    
     if nom_fitxer_pickle and os.path.exists(nom_fitxer_pickle):
         with open(nom_fitxer_pickle, 'rb') as f: 
             gestionador = pickle.load(f) 
@@ -30,8 +36,7 @@ def inicialitzar (nom_fitxer_pickle:str, tipus):
         gestionador = Gestionador(tipus_contingut='BOOKS')
         gestionador.importar_dades('Ratings.csv', ',')
         gestionador.importar_dades_contingut('Books.csv', ',')
-        logging.info("Gestionador inicialitzat amb Books")
-        
+        logging.info("Gestionador inicialitzat amb Books")  
     
     with open(nom_fitxer_pickle, 'wb') as f:
         pickle.dump(gestionador, f)
@@ -110,26 +115,26 @@ def main():
 if __name__ == "__main__":
 
     logging.basicConfig(
-
-    filename='log '+ get_data() +'.txt',
     level=logging.INFO,
     format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
-    #handlers= [logging.FileHandler('log '+ get_data() +'.txt'), 
-              #logging.StreamHandler()] 
-    )   #no fa fitxer nou
+    handlers=[
+        logging.FileHandler('log '+ get_data() +'.txt'), 
+        logging.StreamHandler()
+    ]
+)
 
     tipus=int(sys.argv[1]) if len(sys.argv) > 1 else None
 
     if not tipus or tipus not in [1, 2]:
-        print('Ús correcte')
+        print("Ha hagut un error, aquí s'explica l'ús correcte:")
         print("Per executar el programa, utilitza: python main.py tipus")
         print("Per seleccionar quina base dades vols analitzar has de escriure un d'aquests dos nombres:")
         print("Tipus de dades (1: MovieLens100k, 2: Books)")
         print("Torna a executar el programa seguint aquestes instruccions.")
         logging.warning(f"Argument de tipus no vàlid o no proporcionat: {tipus}")
-
-    gestionador= inicialitzar('gestionador.pkl', tipus)
-    main()
+    else:
+        gestionador= inicialitzar('gestionador.pkl', tipus)
+        main()
 
     logging.shutdown()
 
