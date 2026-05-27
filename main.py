@@ -113,7 +113,9 @@ if __name__ == "__main__":
 
     filename='log '+ get_data() +'.txt',
     level=logging.INFO,
-    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+    #handlers= [logging.FileHandler('log '+ get_data() +'.txt'), 
+              #logging.StreamHandler()] 
     )   #no fa fitxer nou
 
     tipus=int(sys.argv[1]) if len(sys.argv) > 1 else None
@@ -137,6 +139,9 @@ if __name__ == "__main__":
 - podem avaluar davan de la recomnanacio en un usuari al que no hem fet la recomacio?
 - fa falta logging a contingut?
 - les cosees evidents cal documentar-les?
+
+
+el logging tambe ha de sortir a la terminal
 '''
 
 

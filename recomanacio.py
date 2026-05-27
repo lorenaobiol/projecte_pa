@@ -21,10 +21,13 @@ import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 logging.basicConfig(
-    filename='log.txt',
+
+    filename='log '+ get_data() +'.txt',
     level=logging.INFO,
-    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
-)
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+    #handlers= [logging.FileHandler('log '+ get_data() +'.txt'), 
+              #logging.StreamHandler()] 
+    )
 
 class Recomanacio(ABC):
     """

@@ -1,0 +1,7 @@
+2026-05-27 12:16:08,821 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-27 12:16:11,922 | root | INFO | Entrada seleccionada: 1
+2026-05-27 12:16:14,089 | root | INFO | Usuari seleccionat: 20
+2026-05-27 12:16:14,089 | root | INFO | Recomanació inicialitzada
+2026-05-27 12:16:14,089 | root | INFO | Recomanacio col·laborativa seleccionada per l'usuari: 20
+2026-05-27 12:16:15,370 | root | INFO | Similituds trobades per a recomanació col·laborativa
+2026-05-27 12:16:15,400 | root | INFO | Recomanacio calculada per a l'usuari: 20
