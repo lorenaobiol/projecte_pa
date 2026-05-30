@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     tipus=int(sys.argv[1]) if len(sys.argv) > 1 else None
 
-    if not tipus or tipus not in [1, 2]:
+    if tipus is None or tipus not in [1, 2]:
         print("Ha hagut un error, aquí s'explica l'ús correcte:")
         print("Per executar el programa, utilitza: python main.py tipus")
         print("Per seleccionar quina base dades vols analitzar has de escriure un d'aquests dos nombres:")
