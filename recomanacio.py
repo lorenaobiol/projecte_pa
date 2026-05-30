@@ -30,7 +30,7 @@ class Recomanacio(ABC):
         _usuari_a_comparar (int): Identificador de l'usuari per al qual es fa la recomanació.
     """
 
-    _recomanacio_final: dict
+    _recomanacio_final: Dict[int|str, float]
     _gestionador: Gestionador
     _usuari_a_comparar: int
 

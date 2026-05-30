@@ -25,7 +25,7 @@ class Gestionador:
         _tipus_contingut (str): Tipus de contingut del sistema ('MOVIES' o 'BOOKS').
     """
 
-    _matriu_dades: list
+    _matriu_dades: np.ndarray
     _dict_contingut: Dict[str, 'Contingut']
     _usuari_index: Dict[int, int]
     _contingut_index: Dict[str, int]
@@ -38,7 +38,7 @@ class Gestionador:
             tipus_contingut (str): Tipus de contingut del sistema. Valors possibles:
                 'MOVIES' per a pel·lícules, 'BOOKS' per a llibres.
         """
-        self._matriu_dades = []
+        self._matriu_dades = np.array([])
         self._dict_contingut = {}
         self._usuari_index  = {}
         self._contingut_index = {}

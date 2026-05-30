@@ -25,6 +25,8 @@ class Avaluacio(ABC):
     _resultat_RMSE: float
     _recomanador: Recomanacio
     _punt_usuari: List
+    _gestionador: Gestionador
+    _punt_recomanacio: List
 
     def __init__(self, recomanador:Recomanacio, iduser:int, gestionador:Gestionador):
         """Inicialitza l'avaluació amb el recomanador, l'identificador de l'usuari i el gestionador.

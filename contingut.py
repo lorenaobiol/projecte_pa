@@ -38,7 +38,7 @@ class Contingut(ABC):
         Raises:
             NotImplementedError: Si la subclasse no implementa aquest mètode.
         """
-        return NotImplementedError
+        raise NotImplementedError
      
 
 class Llibre(Contingut):
