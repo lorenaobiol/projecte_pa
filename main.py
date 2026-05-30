@@ -47,8 +47,6 @@ def inicialitzar (nom_fitxer_pickle:str, tipus):
 
 def main():
 
-    metode=input('A continuació, selecciona el metode de recomanacio que vols utilitzar, per a la resta de execució:\n 1. Recomanacio simple, 2. Recomanacio col·laborativa, 3. Recomanacio basada en contingut. ')
-
     entrada=input(f"Selecciona que vols fer:\n 1. Recomanacio, 2. Avaluacio. Per sortir introdueix qualsevol altra cosa.")
     logging.info(f"Entrada seleccionada: {entrada}")
     recomanador = None
@@ -60,15 +58,15 @@ def main():
 
         if entrada == '1':   
 
-            if metode == '1':
+            if metode == 1:
                 recomanador = RecomanacioSimple(gestionador,usuari)
                 logging.info(f"Recomanacio simple seleccionada per l'usuari: {usuari}") 
                 
-            elif metode == '2':
+            elif metode == 2:
                 recomanador = RecomanacioColaborativa(gestionador, usuari) 
                 logging.info(f"Recomanacio col·laborativa seleccionada per l'usuari: {usuari}")
 
-            elif metode == '3':
+            elif metode == 3:
                 recomanador = RecomanacioBasadaContingut(gestionador,usuari)
                 logging.info(f"Recomanacio basada en contingut seleccionada per l'usuari: {usuari}")
             
@@ -124,14 +122,25 @@ if __name__ == "__main__":
 )
 
     tipus=int(sys.argv[1]) if len(sys.argv) > 1 else None
+    metode = int(sys.argv[2]) if len(sys.argv) > 2 else None
 
     if tipus is None or tipus not in [1, 2]:
-        print("Ha hagut un error, aquí s'explica l'ús correcte:")
-        print("Per executar el programa, utilitza: python main.py tipus")
+        print("Ha hagut un error amb el tipus, aquí s'explica l'ús correcte:")
+        print("Per executar el programa, utilitza: python main.py tipus metode")
         print("Per seleccionar quina base dades vols analitzar has de escriure un d'aquests dos nombres:")
         print("Tipus de dades (1: MovieLens100k, 2: Books)")
         print("Torna a executar el programa seguint aquestes instruccions.")
-        logging.warning(f"Argument de tipus no vàlid o no proporcionat: {tipus}")
+        print('Si no carrega bé les dades, mira al gestionador i treu, o canvia, el path.\n')
+        logging.warning(f"Tipus no vàlid: {tipus} ")
+
+    elif metode is None or metode not in [1, 2, 3]:
+        print("Ha hagut un error amb el mètode, aquí s'explica l'ús correcte:")
+        print("Per executar el programa, utilitza: python main.py tipus metode")
+        print(" Escull el mètode entre: ")
+        print("1: Recomanació simple, 2: Recomanació col·laborativa, 3: Recomanació basada en contingut")
+        print("Torna a executar el programa seguint aquestes instruccions.")
+        logging.warning(f"Mètode no vàlid: {metode}")
+
     else:
         gestionador= inicialitzar('gestionador.pkl', tipus)
         main()
