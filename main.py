@@ -12,12 +12,15 @@ import sys
 import logging
 
 
-def inicialitzar (nom_fitxer_pickle:str, tipus):
+def inicialitzar (tipus):
 
     if tipus is None:
         logging.warning("No s'ha introduït cap nombre al executar-lo")
         print('Ha hagut un error')
         return None
+    
+    nom_fitxer_pickle = 'gestionador_movies.pkl' if tipus == 1 else 'gestionador_books.pkl'
+
     
     if nom_fitxer_pickle and os.path.exists(nom_fitxer_pickle):
         with open(nom_fitxer_pickle, 'rb') as f: 
@@ -109,6 +112,7 @@ def main():
     else:
         logging.info("Programa finalitzat correctament")
         print('Fins aviat!')
+        
             
 if __name__ == "__main__":
 
@@ -142,7 +146,7 @@ if __name__ == "__main__":
         logging.warning(f"Mètode no vàlid: {metode}")
 
     else:
-        gestionador= inicialitzar('gestionador.pkl', tipus)
+        gestionador= inicialitzar(tipus)
         main()
 
     logging.shutdown()
