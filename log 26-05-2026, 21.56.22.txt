@@ -1,0 +1,24 @@
+2026-05-26 21:56:24,361 | root | INFO | Gestionador carregat des de pickle: gestionador.pkl
+2026-05-26 21:56:29,496 | root | INFO | Entrada seleccionada: 1
+2026-05-26 21:56:32,034 | root | INFO | Usuari seleccionat: 20
+2026-05-26 21:56:32,034 | root | INFO | Recomanació inicialitzada
+2026-05-26 21:56:32,034 | root | INFO | Recomanacio basada en contingut seleccionada per l'usuari: 20
+2026-05-26 21:56:32,095 | root | INFO | Similituds trobades per a recomanació basada en contingut
+2026-05-26 21:56:32,238 | root | INFO | Recomanació calculada per a recomanació basada en contingut
+2026-05-26 21:56:32,239 | root | INFO | Recomanacio calculada per a l'usuari: 20
+2026-05-26 21:56:32,239 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-26 21:56:32,239 | root | INFO | Visualitzant recomanació per a MOVIES
+2026-05-26 21:56:32,239 | root | INFO | Recomanació visualitzada per a l'usuari 20
+2026-05-26 21:56:48,157 | root | INFO | Usuari seleccionat: 1
+2026-05-26 21:56:50,168 | root | INFO | Avaluació inicialitzada per a l'usuari: 1 amb el recomanador: RecomanacioBasadaContingut
+2026-05-26 21:56:50,311 | root | INFO | Recomanació calculada per a recomanació basada en contingut
+2026-05-26 21:56:50,312 | root | INFO | Resultat de MAE: 0.8070487992446651, calculat per a l'usuari 1
+2026-05-26 21:56:56,016 | root | INFO | Usuari seleccionat: 20
+2026-05-26 21:56:59,404 | root | INFO | Avaluació inicialitzada per a l'usuari: 20 amb el recomanador: RecomanacioBasadaContingut
+2026-05-26 21:56:59,548 | root | INFO | Recomanació calculada per a recomanació basada en contingut
+2026-05-26 21:56:59,548 | root | INFO | Resultat de MAE: 0.7315266282310736, calculat per a l'usuari 20
+2026-05-26 21:58:23,981 | root | INFO | Usuari seleccionat: 20
+2026-05-26 21:58:29,387 | root | INFO | Avaluació inicialitzada per a l'usuari: 20 amb el recomanador: RecomanacioBasadaContingut
+2026-05-26 21:58:29,530 | root | INFO | Recomanació calculada per a recomanació basada en contingut
+2026-05-26 21:58:29,530 | root | INFO | Resultat de RMSE: 0.789366574839214, calculat per a l'usuari 20
+2026-05-26 22:01:10,695 | root | INFO | Programa finalitzat correctament

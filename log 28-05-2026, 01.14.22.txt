@@ -1,0 +1,2 @@
+2026-05-28 01:14:22,300 | root | WARNING | Argument de tipus no vàlid o no proporcionat: None
+2026-05-28 01:14:22,301 | root | WARNING | No s'ha introduït cap nombre al executar-lo

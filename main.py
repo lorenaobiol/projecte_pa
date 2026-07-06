@@ -10,16 +10,18 @@ from gestionador import *
 from recomanacio import *
 import sys
 import logging
-from datetime import datetime
 
 
-def get_data():
-    date_time = datetime.now()
-    str_date_time = date_time.strftime("%d-%m-%Y, %H:%M:%S")
-    return str_date_time
+def inicialitzar (tipus):
 
+    if tipus is None:
+        logging.warning("No s'ha introduït cap nombre al executar-lo")
+        print('Ha hagut un error')
+        return None
+    
+    nom_fitxer_pickle = 'gestionador_movies.pkl' if tipus == 1 else 'gestionador_books.pkl'
 
-def inicialitzar (nom_fitxer_pickle:str, tipus):
+    
     if nom_fitxer_pickle and os.path.exists(nom_fitxer_pickle):
         with open(nom_fitxer_pickle, 'rb') as f: 
             gestionador = pickle.load(f) 
@@ -36,19 +38,17 @@ def inicialitzar (nom_fitxer_pickle:str, tipus):
     elif tipus==2:
         gestionador = Gestionador(tipus_contingut='BOOKS')
         gestionador.importar_dades('Ratings.csv', ',')
-        logging.info("Gestionador inicialitzat amb Books")
-        
+        gestionador.importar_dades_contingut('Books.csv', ',')
+        logging.info("Gestionador inicialitzat amb Books")  
     
     with open(nom_fitxer_pickle, 'wb') as f:
         pickle.dump(gestionador, f)
 
         logging.info(f"Gestionador guardat a pickle: {nom_fitxer_pickle}")
 
-    return gestionador, tipus
+    return gestionador
 
 def main():
-
-    metode=input('A continuació, selecciona el metode de recomanacio que vols utilitzar, per a la resta de execució:\n 1. Recomanacio simple, 2. Recomanacio col·laborativa, 3. Recomanacio basada en contingut. ')
 
     entrada=input(f"Selecciona que vols fer:\n 1. Recomanacio, 2. Avaluacio. Per sortir introdueix qualsevol altra cosa.")
     logging.info(f"Entrada seleccionada: {entrada}")
@@ -61,15 +61,15 @@ def main():
 
         if entrada == '1':   
 
-            if metode == '1':
+            if metode == 1:
                 recomanador = RecomanacioSimple(gestionador,usuari)
                 logging.info(f"Recomanacio simple seleccionada per l'usuari: {usuari}") 
                 
-            elif metode == '2':
+            elif metode == 2:
                 recomanador = RecomanacioColaborativa(gestionador, usuari) 
                 logging.info(f"Recomanacio col·laborativa seleccionada per l'usuari: {usuari}")
 
-            elif metode == '3':
+            elif metode == 3:
                 recomanador = RecomanacioBasadaContingut(gestionador,usuari)
                 logging.info(f"Recomanacio basada en contingut seleccionada per l'usuari: {usuari}")
             
@@ -112,31 +112,55 @@ def main():
     else:
         logging.info("Programa finalitzat correctament")
         print('Fins aviat!')
+        
             
 if __name__ == "__main__":
 
     logging.basicConfig(
-
-    filename='log '+ get_data() +'.txt',
     level=logging.INFO,
-    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s'
-    )   #no fa fitxer nou
+    format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+    handlers=[
+        logging.FileHandler('log '+ get_data() +'.txt'), 
+        logging.StreamHandler()
+    ]
+)
 
     tipus=int(sys.argv[1]) if len(sys.argv) > 1 else None
+    metode = int(sys.argv[2]) if len(sys.argv) > 2 else None
 
-    if not tipus or tipus not in [1, 2]:
-        print('Ús correcte')
-        print("Per executar el programa, utilitza: python main.py tipus")
+    if tipus is None or tipus not in [1, 2]:
+        print("Ha hagut un error amb el tipus, aquí s'explica l'ús correcte:")
+        print("Per executar el programa, utilitza: python main.py tipus metode")
         print("Per seleccionar quina base dades vols analitzar has de escriure un d'aquests dos nombres:")
         print("Tipus de dades (1: MovieLens100k, 2: Books)")
         print("Torna a executar el programa seguint aquestes instruccions.")
-        logging.warning(f"Argument de tipus no vàlid o no proporcionat: {tipus}")
+        print('Si no carrega bé les dades, mira al gestionador i treu, o canvia, el path.\n')
+        logging.warning(f"Tipus no vàlid: {tipus} ")
 
-    gestionador= inicialitzar('gestionador.pkl', tipus)
-    main()
+    elif metode is None or metode not in [1, 2, 3]:
+        print("Ha hagut un error amb el mètode, aquí s'explica l'ús correcte:")
+        print("Per executar el programa, utilitza: python main.py tipus metode")
+        print(" Escull el mètode entre: ")
+        print("1: Recomanació simple, 2: Recomanació col·laborativa, 3: Recomanació basada en contingut")
+        print("Torna a executar el programa seguint aquestes instruccions.")
+        logging.warning(f"Mètode no vàlid: {metode}")
+
+    else:
+        gestionador= inicialitzar(tipus)
+        main()
 
     logging.shutdown()
 
+
+'''
+- el rmse inclou les q son zero?
+- podem avaluar davan de la recomnanacio en un usuari al que no hem fet la recomacio?
+- fa falta logging a contingut?
+- les cosees evidents cal documentar-les?
+
+
+el logging tambe ha de sortir a la terminal
+'''
 
 
 

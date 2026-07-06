@@ -1,0 +1,23 @@
+2026-05-28 01:21:32,357 | root | INFO | Inicialització del gestionador per al tipus de contingut: MOVIES
+2026-05-28 01:21:32,465 | root | INFO | Dades importades des de ratings.csv. Nombre d'usuaris: 610, Nombre de continguts: 9724
+2026-05-28 01:21:32,465 | root | INFO | Diccionaris i matriu de dades creada correctament amb forma: (610, 9724)
+2026-05-28 01:21:32,497 | root | INFO | Dades de contingut importades des de movies.csv. Nombre de continguts: 9742
+2026-05-28 01:21:32,498 | root | INFO | Diccionari de contingut creat correctament
+2026-05-28 01:21:32,498 | root | INFO | Gestionador inicialitzat amb MovieLens100k
+2026-05-28 01:21:32,525 | root | INFO | Gestionador guardat a pickle: gestionador.pkl
+2026-05-28 01:21:39,619 | root | INFO | Entrada seleccionada: 1
+2026-05-28 01:21:41,263 | root | INFO | Usuari seleccionat: 20
+2026-05-28 01:21:41,263 | root | INFO | Recomanació inicialitzada
+2026-05-28 01:21:41,264 | root | INFO | Recomanacio col·laborativa seleccionada per l'usuari: 20
+2026-05-28 01:21:41,277 | root | INFO | Similituds trobades per a recomanació col·laborativa
+2026-05-28 01:21:41,524 | root | INFO | Recomanació calculada per a recomanació col·laborativa
+2026-05-28 01:21:41,524 | root | INFO | Recomanacio calculada per a l'usuari: 20
+2026-05-28 01:21:41,525 | root | INFO | Recomanació final calculada i preparada per a visualització
+2026-05-28 01:21:41,525 | root | INFO | Visualitzant recomanació per a MOVIES
+2026-05-28 01:21:41,525 | root | INFO | Recomanació visualitzada per a l'usuari 20
+2026-05-28 01:21:45,560 | root | INFO | Usuari seleccionat: 20
+2026-05-28 01:21:47,713 | root | INFO | Avaluació inicialitzada per a l'usuari: 20 amb el recomanador: RecomanacioColaborativa
+2026-05-28 01:21:47,971 | root | INFO | Recomanació calculada per a recomanació col·laborativa
+2026-05-28 01:21:47,972 | root | INFO | RMSE calculat: 1.194246652155658
+2026-05-28 01:21:47,972 | root | INFO | Resultat de RMSE: 1.194246652155658, calculat per a l'usuari 20
+2026-05-28 01:21:52,051 | root | INFO | Programa finalitzat correctament
